@@ -16,6 +16,7 @@ import {
 import ProtectedRoute from '@/components/protected-route'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { useAuth } from '@/lib/auth-context'
+import { WeeklyActivityChart, ThreatCategoriesChart, HourlyActivityChart } from '@/components/dashboard-charts'
 
 const stats = [
   { name: 'Total Employees', value: '156', change: '+12%', changeType: 'increase', icon: Users },
@@ -61,9 +62,10 @@ const recentActivities = [
 
 const quickActions = [
   { name: 'Upload DNS Logs', icon: Upload, href: '/dashboard/upload', color: 'blue' },
-  { name: 'View Results', icon: BarChart3, href: '/dashboard/results', color: 'green' },
-  { name: 'Manage Employees', icon: Users, href: '/dashboard/employees', color: 'purple' },
-  { name: 'Send Warning', icon: Mail, href: '/dashboard/email', color: 'yellow' },
+  { name: 'Analytics Dashboard', icon: BarChart3, href: '/dashboard/analytics', color: 'green' },
+  { name: 'View Results', icon: Shield, href: '/dashboard/results', color: 'purple' },
+  { name: 'Manage Employees', icon: Users, href: '/dashboard/employees', color: 'indigo' },
+  { name: 'Alert System', icon: Mail, href: '/dashboard/alerts', color: 'yellow' },
 ]
 
 export default function DashboardPage() {
@@ -264,34 +266,85 @@ export default function DashboardPage() {
         </motion.div>
       </div>
 
-      {/* Performance Chart Placeholder */}
+      {/* Analytics Charts Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Weekly Activity Chart */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8 }}
+          className="glass rounded-2xl p-6"
+        >
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              Weekly DNS Activity
+            </h2>
+            <div className="flex space-x-2">
+              <button className="px-3 py-1 text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full">
+                7 days
+              </button>
+              <button className="px-3 py-1 text-xs text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full">
+                30 days
+              </button>
+            </div>
+          </div>
+          <WeeklyActivityChart />
+        </motion.div>
+
+        {/* Threat Categories Chart */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.9 }}
+          className="glass rounded-2xl p-6"
+        >
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              Threat Categories
+            </h2>
+            <button 
+              onClick={() => router.push('/dashboard/analytics')}
+              className="text-slate-700 dark:text-slate-300 hover:text-slate-800 dark:hover:text-slate-200 text-sm font-medium"
+            >
+              View details
+            </button>
+          </div>
+          <ThreatCategoriesChart />
+          <div className="mt-4 space-y-2">
+            {[
+              { name: 'Data Exfiltration', count: 45, color: 'bg-red-500' },
+              { name: 'Unauthorized Access', count: 38, color: 'bg-orange-500' },
+              { name: 'Suspicious Browsing', count: 32, color: 'bg-yellow-500' }
+            ].map((category, index) => (
+              <div key={category.name} className="flex items-center justify-between text-sm">
+                <div className="flex items-center space-x-2">
+                  <div className={`w-3 h-3 rounded-full ${category.color}`} />
+                  <span className="text-gray-700 dark:text-gray-300">{category.name}</span>
+                </div>
+                <span className="text-gray-600 dark:text-gray-400">{category.count}</span>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Hourly Activity Heatmap */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8 }}
+        transition={{ delay: 1.0 }}
         className="glass rounded-2xl p-6"
       >
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-            Weekly DNS Activity
+            24-Hour Activity Pattern
           </h2>
-          <div className="flex space-x-2">
-            <button className="px-3 py-1 text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full">
-              7 days
-            </button>
-            <button className="px-3 py-1 text-xs text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full">
-              30 days
-            </button>
+          <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+            <Clock className="h-4 w-4" />
+            <span>Today's activity distribution</span>
           </div>
         </div>
-        <div className="h-64 bg-gradient-to-r from-slate-50/50 to-slate-100/50 dark:from-gray-800 dark:to-gray-700 rounded-xl flex items-center justify-center">
-          <div className="text-center">
-            <BarChart3 className="h-12 w-12 text-slate-400 mx-auto mb-2" />
-            <p className="text-slate-500 dark:text-slate-400">
-              Chart component will be implemented in Phase 4
-            </p>
-          </div>
-        </div>
+        <HourlyActivityChart />
       </motion.div>
           </div>
         </div>
