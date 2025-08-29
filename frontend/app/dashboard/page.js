@@ -1,15 +1,14 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useRouter } from 'next/navigation'
 import { 
   Users, 
   AlertTriangle,
   TrendingUp, 
+  TrendingDown,
   Shield,
-  Activity,
   Clock,
-  Target,
-  CheckCircle,
   BarChart3,
   Upload,
   Mail
@@ -62,13 +61,14 @@ const recentActivities = [
 
 const quickActions = [
   { name: 'Upload DNS Logs', icon: Upload, href: '/dashboard/upload', color: 'blue' },
-  { name: 'View Alerts', icon: AlertTriangle, href: '/dashboard/alerts', color: 'red' },
+  { name: 'View Results', icon: BarChart3, href: '/dashboard/results', color: 'green' },
+  { name: 'Manage Employees', icon: Users, href: '/dashboard/employees', color: 'purple' },
   { name: 'Send Warning', icon: Mail, href: '/dashboard/email', color: 'yellow' },
-  { name: 'Generate Report', icon: BarChart3, href: '/dashboard/reports', color: 'green' },
 ]
 
 export default function DashboardPage() {
   const { user, logout } = useAuth()
+  const router = useRouter()
 
   const handleLogout = async () => {
     try {
@@ -122,7 +122,7 @@ export default function DashboardPage() {
               Welcome back! 👋
             </h1>
             <p className="text-gray-600 dark:text-gray-300 mt-2">
-              Here's what's happening with your team's DNS activity today.
+              Here&apos;s what&apos;s happening with your team&apos;s DNS activity today.
             </p>
           </div>
           <div className="hidden sm:block">
@@ -239,6 +239,7 @@ export default function DashboardPage() {
                 transition={{ delay: 0.6 + index * 0.1 }}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
+                onClick={() => router.push(action.href)}
                 className="w-full flex items-center space-x-3 p-4 rounded-lg bg-slate-50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all duration-200 group"
               >
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${

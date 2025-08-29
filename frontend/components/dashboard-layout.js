@@ -8,7 +8,6 @@ import {
   Upload, 
   Users, 
   Mail, 
-  Settings, 
   Menu, 
   X,
   LogOut,
@@ -37,10 +36,11 @@ export default function DashboardLayout({ children }) {
 
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: BarChart3 },
-    { name: 'Upload Logs', href: '/upload', icon: Upload },
-    { name: 'Employees', href: '/employees', icon: Users },
-    { name: 'Email Alerts', href: '/alerts', icon: Mail },
-    { name: 'Settings', href: '/settings', icon: Settings },
+    { name: 'Upload Logs', href: '/dashboard/upload', icon: Upload },
+    { name: 'View Results', href: '/dashboard/results', icon: Shield },
+    { name: 'Employees', href: '/dashboard/employees', icon: Users },
+    { name: 'Email Alerts', href: '/dashboard/alerts', icon: Mail },
+    { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
   ]
 
   return (
