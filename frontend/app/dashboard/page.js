@@ -1,0 +1,300 @@
+'use client'
+
+import { motion } from 'framer-motion'
+import { 
+  Users, 
+  AlertTriangle, 
+  TrendingUp, 
+  Shield,
+  Activity,
+  Clock,
+  Target,
+  CheckCircle,
+  BarChart3,
+  Upload,
+  Mail
+} from 'lucide-react'
+import ProtectedRoute from '@/components/protected-route'
+import { ThemeToggle } from '@/components/theme-toggle'
+import { useAuth } from '@/lib/auth-context'
+
+const stats = [
+  { name: 'Total Employees', value: '156', change: '+12%', changeType: 'increase', icon: Users },
+  { name: 'Active Alerts', value: '23', change: '+5%', changeType: 'increase', icon: AlertTriangle },
+  { name: 'DNS Logs Processed', value: '1.2M', change: '+18%', changeType: 'increase', icon: BarChart3 },
+  { name: 'Security Score', value: '87%', change: '+3%', changeType: 'increase', icon: Shield },
+]
+
+const recentActivities = [
+  {
+    id: 1,
+    user: 'John Doe',
+    action: 'High risk behavior detected',
+    time: '2 minutes ago',
+    type: 'alert',
+    severity: 'high'
+  },
+  {
+    id: 2,
+    user: 'Sarah Wilson',
+    action: 'Job hunting activity detected',
+    time: '15 minutes ago',
+    type: 'warning',
+    severity: 'medium'
+  },
+  {
+    id: 3,
+    user: 'Mike Johnson',
+    action: 'Entertainment usage within limits',
+    time: '1 hour ago',
+    type: 'info',
+    severity: 'low'
+  },
+  {
+    id: 4,
+    user: 'Emily Davis',
+    action: 'Warning email sent',
+    time: '2 hours ago',
+    type: 'email',
+    severity: 'medium'
+  },
+]
+
+const quickActions = [
+  { name: 'Upload DNS Logs', icon: Upload, href: '/dashboard/upload', color: 'blue' },
+  { name: 'View Alerts', icon: AlertTriangle, href: '/dashboard/alerts', color: 'red' },
+  { name: 'Send Warning', icon: Mail, href: '/dashboard/email', color: 'yellow' },
+  { name: 'Generate Report', icon: BarChart3, href: '/dashboard/reports', color: 'green' },
+]
+
+export default function DashboardPage() {
+  const { user, logout } = useAuth()
+
+  const handleLogout = async () => {
+    try {
+      await logout()
+      window.location.href = '/'
+    } catch (error) {
+      console.error('Logout error:', error)
+    }
+  }
+
+  return (
+    <ProtectedRoute>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        {/* Simple Header */}
+        <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center h-16">
+              <div className="flex items-center space-x-3">
+                <Shield className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+                <span className="text-xl font-bold text-gray-900 dark:text-white">
+                  DNS Analytics Dashboard
+                </span>
+              </div>
+              <div className="flex items-center space-x-4">
+                <span className="text-gray-600 dark:text-gray-300">
+                  Welcome, {user?.displayName || user?.email || 'User'}
+                </span>
+                <ThemeToggle />
+                <button
+                  onClick={handleLogout}
+                  className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-200"
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="space-y-8">
+      {/* Welcome Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="glass rounded-2xl p-8 bg-gradient-to-r from-blue-500/10 to-purple-500/10"
+      >
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              Welcome back! 👋
+            </h1>
+            <p className="text-gray-600 dark:text-gray-300 mt-2">
+              Here's what's happening with your team's DNS activity today.
+            </p>
+          </div>
+          <div className="hidden sm:block">
+            <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+              <Clock className="h-4 w-4" />
+              <span>Last updated: 2 minutes ago</span>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {stats.map((stat, index) => (
+          <motion.div
+            key={stat.name}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            className="glass rounded-xl p-6 hover:shadow-lg transition-all duration-300 group"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  {stat.name}
+                </p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
+                  {stat.value}
+                </p>
+                <div className="flex items-center mt-2">
+                  {stat.changeType === 'increase' ? (
+                    <TrendingUp className="h-4 w-4 text-green-500" />
+                  ) : (
+                    <TrendingDown className="h-4 w-4 text-red-500" />
+                  )}
+                  <span className={`text-sm font-medium ml-1 ${
+                    stat.changeType === 'increase' ? 'text-green-500' : 'text-red-500'
+                  }`}>
+                    {stat.change}
+                  </span>
+                </div>
+              </div>
+              <div className="flex-shrink-0">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <stat.icon className="h-6 w-6 text-white" />
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Recent Activities */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.4 }}
+          className="lg:col-span-2 glass rounded-2xl p-6"
+        >
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              Recent Activities
+            </h2>
+            <button className="text-blue-600 dark:text-blue-400 hover:text-blue-500 text-sm font-medium">
+              View all
+            </button>
+          </div>
+          <div className="space-y-4">
+            {recentActivities.map((activity, index) => (
+              <motion.div
+                key={activity.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 + index * 0.1 }}
+                className="flex items-center space-x-4 p-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200"
+              >
+                <div className={`w-2 h-2 rounded-full ${
+                  activity.severity === 'high' ? 'bg-red-500' :
+                  activity.severity === 'medium' ? 'bg-yellow-500' : 'bg-green-500'
+                }`} />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">
+                    {activity.user}
+                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    {activity.action}
+                  </p>
+                </div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">
+                  {activity.time}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Quick Actions */}
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.4 }}
+          className="glass rounded-2xl p-6"
+        >
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
+            Quick Actions
+          </h2>
+          <div className="space-y-4">
+            {quickActions.map((action, index) => (
+              <motion.button
+                key={action.name}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 + index * 0.1 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="w-full flex items-center space-x-3 p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 group"
+              >
+                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                  action.color === 'blue' ? 'bg-blue-100 dark:bg-blue-900/30' :
+                  action.color === 'red' ? 'bg-red-100 dark:bg-red-900/30' :
+                  action.color === 'yellow' ? 'bg-yellow-100 dark:bg-yellow-900/30' :
+                  'bg-green-100 dark:bg-green-900/30'
+                }`}>
+                  <action.icon className={`h-5 w-5 ${
+                    action.color === 'blue' ? 'text-blue-600 dark:text-blue-400' :
+                    action.color === 'red' ? 'text-red-600 dark:text-red-400' :
+                    action.color === 'yellow' ? 'text-yellow-600 dark:text-yellow-400' :
+                    'text-green-600 dark:text-green-400'
+                  }`} />
+                </div>
+                <span className="text-sm font-medium text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200">
+                  {action.name}
+                </span>
+              </motion.button>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Performance Chart Placeholder */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.8 }}
+        className="glass rounded-2xl p-6"
+      >
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+            Weekly DNS Activity
+          </h2>
+          <div className="flex space-x-2">
+            <button className="px-3 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full">
+              7 days
+            </button>
+            <button className="px-3 py-1 text-xs text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full">
+              30 days
+            </button>
+          </div>
+        </div>
+        <div className="h-64 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-700 rounded-xl flex items-center justify-center">
+          <div className="text-center">
+            <BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-2" />
+            <p className="text-gray-500 dark:text-gray-400">
+              Chart component will be implemented in Phase 4
+            </p>
+          </div>
+        </div>
+      </motion.div>
+          </div>
+        </div>
+      </div>
+    </ProtectedRoute>
+  )
+}
