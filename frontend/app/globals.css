@@ -7,11 +7,11 @@
     @apply border-gray-200 dark:border-gray-700;
   }
   body {
-    @apply bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100;
+    @apply bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100;
   }
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar with professional styling */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -28,23 +28,24 @@
   @apply bg-gray-400 dark:bg-gray-500;
 }
 
-/* Glass morphism effect */
+/* Professional glass morphism effect */
 .glass {
-  @apply bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border border-white/20 dark:border-gray-700/30;
+  @apply bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border border-gray-200/50 dark:border-gray-700/50;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
-/* Premium gradient backgrounds */
+/* Professional gradient backgrounds */
 .gradient-bg {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #64748b 0%, #475569 100%);
 }
 
 .gradient-bg-dark {
-  background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #581c87 100%);
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
 }
 
-/* Animated background */
+/* Sophisticated animated background */
 .animated-bg {
-  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background: linear-gradient(-45deg, #64748b, #10b981, #3b82f6, #475569);
   background-size: 400% 400%;
   animation: gradient 15s ease infinite;
 }
@@ -59,4 +60,26 @@
   100% {
     background-position: 0% 50%;
   }
+}
+
+/* Professional card hover effects */
+.card-hover {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+.card-hover:hover {
+  @apply transform -translate-y-1 shadow-xl;
+}
+
+/* Professional button styles */
+.btn-primary {
+  @apply bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white;
+}
+
+.btn-accent {
+  @apply bg-gradient-to-r from-accent-600 to-accent-700 hover:from-accent-700 hover:to-accent-800 text-white;
+}
+
+.btn-brand {
+  @apply bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-700 hover:to-brand-800 text-white;
 }

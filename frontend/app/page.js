@@ -40,13 +40,13 @@ export default function HomePage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       {/* Navigation */}
       <nav className="glass border-b backdrop-blur-lg sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
-              <Shield className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+              <Shield className="h-8 w-8 text-slate-700 dark:text-slate-300" />
               <span className="text-xl font-bold text-gray-900 dark:text-white">
                 DNS Analytics Pro
               </span>
@@ -55,7 +55,7 @@ export default function HomePage() {
               <ThemeToggle />
               <Link 
                 href="/dashboard"
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200"
+                className="px-4 py-2 bg-slate-700 hover:bg-slate-800 text-white rounded-lg transition-colors duration-200"
               >
                 Get Started
               </Link>
@@ -74,7 +74,7 @@ export default function HomePage() {
               transition={{ duration: 0.6 }}
               className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6"
             >
-              AI-Powered <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">DNS Analytics</span>
+              AI-Powered <span className="text-transparent bg-clip-text bg-gradient-to-r from-slate-700 to-slate-600 dark:from-slate-300 dark:to-slate-400">DNS Analytics</span>
             </motion.h1>
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
@@ -93,7 +93,7 @@ export default function HomePage() {
             >
               <Link 
                 href="/dashboard"
-                className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-semibold transition-all duration-200 transform hover:scale-105"
+                className="px-8 py-4 bg-slate-700 hover:bg-slate-800 text-white rounded-xl font-semibold transition-all duration-200 transform hover:scale-105"
               >
                 Start Analyzing Now
               </Link>
@@ -107,10 +107,10 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Floating elements */}
-        <div className="absolute top-20 left-10 w-20 h-20 bg-blue-500/10 rounded-full blur-xl animate-pulse-slow"></div>
-        <div className="absolute top-40 right-10 w-32 h-32 bg-purple-500/10 rounded-full blur-xl animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute bottom-20 left-1/4 w-16 h-16 bg-pink-500/10 rounded-full blur-xl animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
+        {/* Floating elements with professional colors */}
+        <div className="absolute top-20 left-10 w-20 h-20 bg-primary-500/10 rounded-full blur-xl animate-pulse-slow"></div>
+        <div className="absolute top-40 right-10 w-32 h-32 bg-accent-500/10 rounded-full blur-xl animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-20 left-1/4 w-16 h-16 bg-brand-500/10 rounded-full blur-xl animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
       </section>
 
       {/* Features Grid */}
@@ -134,7 +134,7 @@ export default function HomePage() {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="glass rounded-2xl p-8 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
               >
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center mb-6">
+                <div className="w-12 h-12 bg-slate-700 dark:bg-slate-600 rounded-xl flex items-center justify-center mb-6">
                   <feature.icon className="h-6 w-6 text-white" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
@@ -166,7 +166,7 @@ export default function HomePage() {
             </p>
             <Link 
               href="/dashboard"
-              className="inline-block px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-semibold transition-all duration-200 transform hover:scale-105"
+              className="inline-block px-8 py-4 bg-slate-700 hover:bg-slate-800 text-white rounded-xl font-semibold transition-all duration-200 transform hover:scale-105"
             >
               Get Started Today
             </Link>
@@ -178,7 +178,7 @@ export default function HomePage() {
       <footer className="bg-gray-900 dark:bg-gray-950 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="flex items-center justify-center space-x-3 mb-4">
-            <Shield className="h-6 w-6 text-blue-400" />
+            <Shield className="h-6 w-6 text-slate-400" />
             <span className="text-lg font-semibold">DNS Analytics Pro</span>
           </div>
           <p className="text-gray-400 mb-4">

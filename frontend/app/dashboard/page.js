@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import { 
   Users, 
-  AlertTriangle, 
+  AlertTriangle,
   TrendingUp, 
   Shield,
   Activity,
@@ -81,13 +81,13 @@ export default function DashboardPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         {/* Simple Header */}
-        <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+        <header className="glass border-b backdrop-blur-lg sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
               <div className="flex items-center space-x-3">
-                <Shield className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+                <Shield className="h-8 w-8 text-slate-700 dark:text-slate-300" />
                 <span className="text-xl font-bold text-gray-900 dark:text-white">
                   DNS Analytics Dashboard
                 </span>
@@ -99,7 +99,7 @@ export default function DashboardPage() {
                 <ThemeToggle />
                 <button
                   onClick={handleLogout}
-                  className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-200"
+                  className="px-4 py-2 bg-slate-700 hover:bg-slate-800 text-white rounded-lg transition-all duration-200"
                 >
                   Logout
                 </button>
@@ -114,7 +114,7 @@ export default function DashboardPage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="glass rounded-2xl p-8 bg-gradient-to-r from-blue-500/10 to-purple-500/10"
+        className="glass rounded-2xl p-8 bg-gradient-to-r from-slate-700/10 to-slate-600/10"
       >
         <div className="flex items-center justify-between">
           <div>
@@ -166,7 +166,7 @@ export default function DashboardPage() {
                 </div>
               </div>
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <div className="w-12 h-12 bg-slate-700 dark:bg-slate-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                   <stat.icon className="h-6 w-6 text-white" />
                 </div>
               </div>
@@ -187,7 +187,7 @@ export default function DashboardPage() {
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
               Recent Activities
             </h2>
-            <button className="text-blue-600 dark:text-blue-400 hover:text-blue-500 text-sm font-medium">
+            <button className="text-slate-700 dark:text-slate-300 hover:text-slate-800 dark:hover:text-slate-200 text-sm font-medium">
               View all
             </button>
           </div>
@@ -198,7 +198,7 @@ export default function DashboardPage() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 + index * 0.1 }}
-                className="flex items-center space-x-4 p-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200"
+                className="flex items-center space-x-4 p-4 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors duration-200"
               >
                 <div className={`w-2 h-2 rounded-full ${
                   activity.severity === 'high' ? 'bg-red-500' :
@@ -239,22 +239,22 @@ export default function DashboardPage() {
                 transition={{ delay: 0.6 + index * 0.1 }}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full flex items-center space-x-3 p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 group"
+                className="w-full flex items-center space-x-3 p-4 rounded-lg bg-slate-50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all duration-200 group"
               >
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                  action.color === 'blue' ? 'bg-blue-100 dark:bg-blue-900/30' :
-                  action.color === 'red' ? 'bg-red-100 dark:bg-red-900/30' :
-                  action.color === 'yellow' ? 'bg-yellow-100 dark:bg-yellow-900/30' :
-                  'bg-green-100 dark:bg-green-900/30'
+                  action.color === 'blue' ? 'bg-slate-100 dark:bg-slate-800' :
+                  action.color === 'red' ? 'bg-slate-100 dark:bg-slate-800' :
+                  action.color === 'yellow' ? 'bg-slate-100 dark:bg-slate-800' :
+                  'bg-slate-100 dark:bg-slate-800'
                 }`}>
                   <action.icon className={`h-5 w-5 ${
-                    action.color === 'blue' ? 'text-blue-600 dark:text-blue-400' :
-                    action.color === 'red' ? 'text-red-600 dark:text-red-400' :
-                    action.color === 'yellow' ? 'text-yellow-600 dark:text-yellow-400' :
-                    'text-green-600 dark:text-green-400'
+                    action.color === 'blue' ? 'text-slate-700 dark:text-slate-300' :
+                    action.color === 'red' ? 'text-slate-700 dark:text-slate-300' :
+                    action.color === 'yellow' ? 'text-slate-700 dark:text-slate-300' :
+                    'text-slate-700 dark:text-slate-300'
                   }`} />
                 </div>
-                <span className="text-sm font-medium text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200">
+                <span className="text-sm font-medium text-gray-900 dark:text-white group-hover:text-slate-700 dark:group-hover:text-slate-300 transition-colors duration-200">
                   {action.name}
                 </span>
               </motion.button>
@@ -275,18 +275,18 @@ export default function DashboardPage() {
             Weekly DNS Activity
           </h2>
           <div className="flex space-x-2">
-            <button className="px-3 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full">
+            <button className="px-3 py-1 text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full">
               7 days
             </button>
-            <button className="px-3 py-1 text-xs text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full">
+            <button className="px-3 py-1 text-xs text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full">
               30 days
             </button>
           </div>
         </div>
-        <div className="h-64 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-700 rounded-xl flex items-center justify-center">
+        <div className="h-64 bg-gradient-to-r from-slate-50/50 to-slate-100/50 dark:from-gray-800 dark:to-gray-700 rounded-xl flex items-center justify-center">
           <div className="text-center">
-            <BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-2" />
-            <p className="text-gray-500 dark:text-gray-400">
+            <BarChart3 className="h-12 w-12 text-slate-400 mx-auto mb-2" />
+            <p className="text-slate-500 dark:text-slate-400">
               Chart component will be implemented in Phase 4
             </p>
           </div>
