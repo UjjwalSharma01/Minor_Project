@@ -74,7 +74,7 @@ export default function DashboardLayout({ children }) {
               <div className="flex items-center space-x-3">
                 <Shield className="h-8 w-8 text-blue-600 dark:text-blue-400" />
                 <span className="text-lg font-bold text-gray-900 dark:text-white">
-                  DNS Analytics
+                  FocusGuard ML
                 </span>
               </div>
               <button

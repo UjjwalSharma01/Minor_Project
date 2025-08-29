@@ -21,7 +21,7 @@ import { WeeklyActivityChart, ThreatCategoriesChart, HourlyActivityChart } from 
 const stats = [
   { name: 'Total Employees', value: '156', change: '+12%', changeType: 'increase', icon: Users },
   { name: 'Active Alerts', value: '23', change: '+5%', changeType: 'increase', icon: AlertTriangle },
-  { name: 'DNS Logs Processed', value: '1.2M', change: '+18%', changeType: 'increase', icon: BarChart3 },
+  { name: 'Network Logs Processed', value: '1.2M', change: '+18%', changeType: 'increase', icon: BarChart3 },
   { name: 'Security Score', value: '87%', change: '+3%', changeType: 'increase', icon: Shield },
 ]
 
@@ -61,7 +61,7 @@ const recentActivities = [
 ]
 
 const quickActions = [
-  { name: 'Upload DNS Logs', icon: Upload, href: '/dashboard/upload', color: 'blue' },
+  { name: 'Upload Network Logs', icon: Upload, href: '/dashboard/upload', color: 'blue' },
   { name: 'Analytics Dashboard', icon: BarChart3, href: '/dashboard/analytics', color: 'green' },
   { name: 'View Results', icon: Shield, href: '/dashboard/results', color: 'purple' },
   { name: 'Manage Employees', icon: Users, href: '/dashboard/employees', color: 'indigo' },
@@ -91,7 +91,7 @@ export default function DashboardPage() {
               <div className="flex items-center space-x-3">
                 <Shield className="h-8 w-8 text-slate-700 dark:text-slate-300" />
                 <span className="text-xl font-bold text-gray-900 dark:text-white">
-                  DNS Analytics Dashboard
+                  FocusGuard ML Dashboard
                 </span>
               </div>
               <div className="flex items-center space-x-4">
@@ -315,7 +315,7 @@ export default function DashboardPage() {
               { name: 'Data Exfiltration', count: 45, color: 'bg-red-500' },
               { name: 'Unauthorized Access', count: 38, color: 'bg-orange-500' },
               { name: 'Suspicious Browsing', count: 32, color: 'bg-yellow-500' }
-            ].map((category, index) => (
+            ].map((category) => (
               <div key={category.name} className="flex items-center justify-between text-sm">
                 <div className="flex items-center space-x-2">
                   <div className={`w-3 h-3 rounded-full ${category.color}`} />
@@ -341,7 +341,7 @@ export default function DashboardPage() {
           </h2>
           <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
             <Clock className="h-4 w-4" />
-            <span>Today's activity distribution</span>
+            <span>Today&apos;s activity distribution</span>
           </div>
         </div>
         <HourlyActivityChart />

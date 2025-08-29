@@ -10,7 +10,7 @@ export default function HomePage() {
     {
       icon: Shield,
       title: 'AI-Powered Analysis',
-      description: 'Advanced machine learning algorithms analyze DNS logs to detect employee behavior patterns and potential security risks.'
+      description: 'Advanced machine learning algorithms analyze network logs to detect employee behavior patterns and convert them into actionable insights.'
     },
     {
       icon: BarChart3,
@@ -30,7 +30,7 @@ export default function HomePage() {
     {
       icon: Upload,
       title: 'Easy Upload',
-      description: 'Simple drag-and-drop interface for DNS log uploads with support for multiple file formats and batch processing.'
+      description: 'Simple drag-and-drop interface for network log uploads with support for multiple file formats and batch processing.'
     },
     {
       icon: Mail,
@@ -48,7 +48,7 @@ export default function HomePage() {
             <div className="flex items-center space-x-3">
               <Shield className="h-8 w-8 text-slate-700 dark:text-slate-300" />
               <span className="text-xl font-bold text-gray-900 dark:text-white">
-                DNS Analytics Pro
+                FocusGuard ML
               </span>
             </div>
             <div className="flex items-center space-x-4">
@@ -74,7 +74,7 @@ export default function HomePage() {
               transition={{ duration: 0.6 }}
               className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6"
             >
-              AI-Powered <span className="text-transparent bg-clip-text bg-gradient-to-r from-slate-700 to-slate-600 dark:from-slate-300 dark:to-slate-400">DNS Analytics</span>
+              AI-Powered <span className="text-transparent bg-clip-text bg-gradient-to-r from-slate-700 to-slate-600 dark:from-slate-300 dark:to-slate-400">Network Insights</span>
             </motion.h1>
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
@@ -83,7 +83,7 @@ export default function HomePage() {
               className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto"
             >
               Monitor employee behavior, detect anomalies, and ensure productivity with our premium AI platform. 
-              Get instant insights from DNS logs with automated alerts and comprehensive reporting.
+              Get instant insights from network logs with automated alerts and comprehensive reporting.
             </motion.p>
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
@@ -101,7 +101,7 @@ export default function HomePage() {
                 href="/upload"
                 className="px-8 py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 rounded-xl font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200"
               >
-                Upload DNS Logs
+                Upload Network Logs
               </Link>
             </motion.div>
           </div>
@@ -162,7 +162,7 @@ export default function HomePage() {
               Ready to Transform Your HR Analytics?
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
-              Join leading companies using AI-powered DNS analysis for employee monitoring and security.
+              Join leading companies using AI-powered network analysis for employee monitoring and actionable insights.
             </p>
             <Link 
               href="/dashboard"
@@ -179,13 +179,13 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="flex items-center justify-center space-x-3 mb-4">
             <Shield className="h-6 w-6 text-slate-400" />
-            <span className="text-lg font-semibold">DNS Analytics Pro</span>
+            <span className="text-lg font-semibold">FocusGuard ML</span>
           </div>
           <p className="text-gray-400 mb-4">
-            Premium AI-powered DNS log analysis for modern enterprises
+            Premium AI-powered network log analysis for modern enterprises
           </p>
           <p className="text-sm text-gray-500">
-            © 2025 DNS Analytics Pro. All rights reserved.
+            © 2025 FocusGuard ML. All rights reserved.
           </p>
         </div>
       </footer>

@@ -1,10 +1,10 @@
-# Network Behavior Parser
+# FocusGuard ML - Network Behavior Parser
 
-A machine learning-based tool for analyzing DNS logs to classify user behavior into predefined categories for productivity monitoring in corporate environments.
+A machine learning-based tool for analyzing network logs to classify user behavior into predefined categories for productivity monitoring in corporate environments, converting raw logs into actionable insights.
 
 ## Features
 
-- **File-based DNS log analysis** from `networkLogs.json` or NextDNS API
+- **File-based network log analysis** from `networkLogs.json` or NextDNS API
 - **External domain categorization** via `domain_categories.json` (200+ domains)
 - **Custom training data** support through `training_data.json`
 - **ML-based behavior classification** into 5 categories:
@@ -16,6 +16,7 @@ A machine learning-based tool for analyzing DNS logs to classify user behavior i
 - **Enhanced domain matching** with subdomain support and prefix removal
 - **Anomaly detection** for unusual patterns
 - **Privacy-focused**: Uses domain-level analysis with IP anonymization
+- **Actionable insights**: Converts raw network logs into meaningful behavioral patterns
 
 ## Quick Start
 
@@ -24,7 +25,7 @@ A machine learning-based tool for analyzing DNS logs to classify user behavior i
 ```bash
 # Clone or download the code
 git clone <repository-url>
-cd network-behavior-parser
+cd focusguard-ml
 
 # Install dependencies
 pip install -r requirements.txt
@@ -34,7 +35,7 @@ pip install -r requirements.txt
 
 The system expects three JSON files:
 
-#### `networkLogs.json` - Your DNS logs
+#### `networkLogs.json` - Your network logs
 ```json
 {
   "logs": [

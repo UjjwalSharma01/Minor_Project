@@ -181,7 +181,7 @@ export default function ResultsPage() {
                   Analysis Results
                 </h1>
                 <p className="text-lg text-gray-600 dark:text-gray-300">
-                  Review behavior classifications and confidence scores from DNS log analysis
+                  Review behavior classifications and confidence scores from network log analysis
                 </p>
               </div>
               <div className="mt-4 sm:mt-0 flex items-center space-x-3">
