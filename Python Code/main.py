@@ -27,6 +27,7 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 import matplotlib.pyplot as plt
 import seaborn as sns
+import xgboost as xgb
 
 # Setup logging
 logging.basicConfig(
@@ -342,11 +343,32 @@ class BehaviorClassifier:
     """ML-based behavior classifier with external training data"""
     
     def __init__(self, training_data_file: str = 'training_data.json'):
-        self.model = RandomForestClassifier(
-            n_estimators=100,
-            max_depth=10,
+        # XGBoost with overfitting-resistant configuration
+        self.model = xgb.XGBClassifier(
+            # Tree parameters (prevent overfitting)
+            max_depth=4,                    # Shallow trees (was 10)
+            min_child_weight=6,             # Minimum samples per leaf
+            
+            # Boosting parameters
+            n_estimators=100,               # Can be higher due to early stopping
+            learning_rate=0.1,              # Conservative learning rate
+            
+            # Regularization (KEY for overfitting prevention)
+            reg_alpha=0.1,                  # L1 regularization
+            reg_lambda=1.0,                 # L2 regularization
+            
+            # Sampling (reduce overfitting)
+            subsample=0.8,                  # Use 80% of training data per tree
+            colsample_bytree=0.8,           # Use 80% of features per tree
+            colsample_bylevel=0.8,          # Use 80% of features per level
+            
+            # Other parameters
             random_state=42,
-            class_weight='balanced'
+            n_jobs=-1,                      # Use all cores
+            eval_metric='mlogloss',         # Multi-class log loss
+            
+            # Handle class imbalance
+            objective='multi:softprob'      # For probability output
         )
         self.scaler = StandardScaler()
         self.label_encoder = LabelEncoder()
@@ -398,7 +420,7 @@ class BehaviorClassifier:
         # Generate samples for each behavior category
         behavior_patterns = {
             'entertainment': {
-                'count': 200,
+                'count': 400,  # Increased from 200
                 'entertainment_pct': (0.6, 0.9),
                 'work_pct': (0.0, 0.2),
                 'unethical_pct': (0.0, 0.1),
@@ -406,7 +428,7 @@ class BehaviorClassifier:
                 'domain_entropy': (2, 4)
             },
             'work': {
-                'count': 250,
+                'count': 450,  # Increased from 250
                 'entertainment_pct': (0.0, 0.2),
                 'work_pct': (0.6, 0.9),
                 'unethical_pct': (0.0, 0.1),
@@ -414,7 +436,7 @@ class BehaviorClassifier:
                 'domain_entropy': (1.5, 3.5)
             },
             'unethical': {
-                'count': 150,
+                'count': 300,  # Increased from 150
                 'entertainment_pct': (0.0, 0.3),
                 'work_pct': (0.0, 0.4),
                 'unethical_pct': (0.2, 0.8),
@@ -422,7 +444,7 @@ class BehaviorClassifier:
                 'domain_entropy': (1, 3)
             },
             'neutral': {
-                'count': 200,
+                'count': 350,  # Increased from 200
                 'entertainment_pct': (0.1, 0.4),
                 'work_pct': (0.1, 0.4),
                 'unethical_pct': (0.0, 0.1),
@@ -430,7 +452,7 @@ class BehaviorClassifier:
                 'domain_entropy': (1, 2.5)
             },
             'mixed': {
-                'count': 200,
+                'count': 400,  # Increased from 200
                 'entertainment_pct': (0.2, 0.5),
                 'work_pct': (0.2, 0.5),
                 'unethical_pct': (0.0, 0.2),
@@ -497,7 +519,7 @@ class BehaviorClassifier:
         return self.create_default_training_data()
     
     def train(self, features_df: Optional[pd.DataFrame] = None, labels: Optional[np.ndarray] = None):
-        """Train the behavior classification model using external or generated data"""
+        """Train XGBoost with validation set and early stopping"""
         if features_df is None or labels is None:
             logger.info("Loading training data from external file...")
             try:
@@ -511,34 +533,84 @@ class BehaviorClassifier:
         X = features_df[self.feature_columns].fillna(0)
         y = labels
         
-        # Split data
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=0.2, random_state=42, stratify=y
+        # Split data - create validation set for early stopping
+        X_temp, X_test, y_temp, y_test = train_test_split(
+            X, y, test_size=0.25, random_state=42, stratify=y
         )
+        
+        # Further split for validation set
+        X_train, X_val, y_train, y_val = train_test_split(
+            X_temp, y_temp, test_size=0.2, random_state=42, stratify=y_temp
+        )
+        
+        logger.info(f"Training samples: {len(X_train)}")
+        logger.info(f"Validation samples: {len(X_val)}")
+        logger.info(f"Test samples: {len(X_test)}")
         
         # Scale features
         X_train_scaled = self.scaler.fit_transform(X_train)
+        X_val_scaled = self.scaler.transform(X_val)
         X_test_scaled = self.scaler.transform(X_test)
         
         # Encode labels
         y_train_encoded = self.label_encoder.fit_transform(y_train)
+        y_val_encoded = self.label_encoder.transform(y_val)
         y_test_encoded = self.label_encoder.transform(y_test)
         
-        # Train classifier
-        logger.info("Training behavior classifier...")
-        self.model.fit(X_train_scaled, y_train_encoded)
+        # Train XGBoost with early stopping
+        logger.info("Training XGBoost classifier with early stopping...")
+        
+        self.model.fit(
+            X_train_scaled, y_train_encoded,
+            eval_set=[(X_train_scaled, y_train_encoded), (X_val_scaled, y_val_encoded)],
+            verbose=False  # Set True to see training progress
+        )
         
         # Train anomaly detector
         self.anomaly_detector.fit(X_train_scaled)
         
-        # Evaluate model
+        # Get predictions
         y_pred = self.model.predict(X_test_scaled)
         accuracy = accuracy_score(y_test_encoded, y_pred)
         
-        logger.info(f"Model trained with accuracy: {accuracy:.3f}")
+        # Get training metrics
+        train_accuracy = self.model.score(X_train_scaled, y_train_encoded)
+        val_accuracy = self.model.score(X_val_scaled, y_val_encoded)
+        
+        logger.info(f"Training accuracy: {train_accuracy:.3f}")
+        logger.info(f"Validation accuracy: {val_accuracy:.3f}")
+        logger.info(f"Test accuracy: {accuracy:.3f}")
+        
+        # Overfitting detection
+        train_val_gap = train_accuracy - val_accuracy
+        train_test_gap = train_accuracy - accuracy
+        
+        logger.info(f"Train-Validation gap: {train_val_gap:.3f}")
+        logger.info(f"Train-Test gap: {train_test_gap:.3f}")
+        
+        if train_val_gap > 0.15:
+            logger.warning("⚠️  HIGH OVERFITTING: Train-Val gap > 15%")
+        elif train_val_gap > 0.10:
+            logger.warning("⚠️  MODERATE OVERFITTING: Train-Val gap > 10%")
+        else:
+            logger.info("✅ Good generalization: Low train-validation gap")
+        
+        # Feature importance analysis
+        self.analyze_xgb_feature_importance()
+        
+        # Cross-validation for additional validation
+        cv_scores = cross_val_score(self.model, X_train_scaled, y_train_encoded, cv=5)
+        logger.info(f"Cross-validation: {cv_scores.mean():.3f} (+/- {cv_scores.std() * 2:.3f})")
+        
         logger.info("\nClassification Report:")
         print(classification_report(y_test_encoded, y_pred, 
                                    target_names=self.label_encoder.classes_))
+        
+        # Check if early stopping was triggered
+        if hasattr(self.model, 'best_iteration'):
+            logger.info(f"Early stopping at iteration: {self.model.best_iteration}")
+            if hasattr(self.model, 'best_score'):
+                logger.info(f"Best validation score: {self.model.best_score}")
         
         self.is_trained = True
     
@@ -573,6 +645,42 @@ class BehaviorClassifier:
         is_anomaly = self.anomaly_detector.predict(X_scaled)[0] == -1
         
         return behavior, confidence, is_anomaly
+    
+    def analyze_xgb_feature_importance(self):
+        """Analyze XGBoost feature importance"""
+        if not self.is_trained:
+            logger.warning("Model not trained - cannot analyze features")
+            return
+        
+        try:
+            # Get different importance types
+            booster = self.model.get_booster()
+            importance_gain = booster.get_importance(importance_type='gain')
+            importance_weight = booster.get_importance(importance_type='weight')
+            
+            logger.info("\n" + "="*60)
+            logger.info("XGBOOST FEATURE IMPORTANCE (Top 10)")
+            logger.info("="*60)
+            
+            # Sort by gain (most important metric)
+            sorted_features = sorted(importance_gain.items(), key=lambda x: x[1], reverse=True)
+            
+            for i, (feature, gain) in enumerate(sorted_features[:10]):
+                weight = importance_weight.get(feature, 0)
+                logger.info(f"{i+1:2d}. {feature:25s} Gain: {gain:.4f} Weight: {weight:.0f}")
+            
+            # Identify low-importance features
+            threshold = 0.02
+            low_importance = [(f, g) for f, g in sorted_features if g < threshold]
+            
+            if len(low_importance) > 0:
+                logger.warning(f"\n{len(low_importance)} features have low importance (<{threshold}):")
+                for feature, gain in low_importance:
+                    logger.warning(f"  - {feature}: {gain:.4f}")
+                logger.warning("Consider removing these features to reduce overfitting")
+                
+        except Exception as e:
+            logger.warning(f"Could not analyze feature importance: {e}")
     
     def save_model(self, filepath: str = 'behavior_model.pkl'):
         """Save trained model to disk"""
@@ -712,7 +820,7 @@ class NetworkBehaviorParser:
     def _generate_summary(self, features: Dict, behavior: str, confidence: float) -> str:
         """Generate human-readable summary"""
         top_domains = features.get('top_domains', {})
-        top_domain_list = ", ".join([f"{d} ({c} queries)" for d, c in list(top_domains.items())[:3]])
+        top_domain_list = ", ".join([d for d, c in list(top_domains.items())[:3]])
         
         summary = f"User behavior classified as '{behavior}' with {confidence:.1%} confidence"
         if top_domain_list:
@@ -885,7 +993,7 @@ def main():
         print(f"\nTop Domains:")
         for domain, count in features['top_domains'].items():
             category = parser.feature_extractor.categorizer.categorize_domain(domain)
-            print(f"- {domain}: {count} queries ({category})")
+            print(f"- {domain} ({category})")
     
     # Save results
     parser.save_results()

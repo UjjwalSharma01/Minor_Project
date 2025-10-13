@@ -1,95 +1,101 @@
-2025-08-20 20:01:38,496 - INFO - Enhanced classifier available
-2025-08-20 20:01:38,497 - INFO - Loaded 255 domain categories
-2025-08-20 20:01:38,497 - INFO - Domain Intelligence System integrated successfully
-2025-08-20 20:01:38,497 - INFO - Using enhanced feature extractor and classifier
-2025-08-20 20:01:38,497 - INFO - Initializing Network Behavior Parser...
-2025-08-20 20:01:38,509 - INFO - Enhanced model loaded from behavior_model.pkl
-2025-08-20 20:01:38,509 - INFO - Loaded existing model
-2025-08-20 20:01:38,509 - INFO - Loading network logs from file...
-2025-08-20 20:01:38,621 - INFO - Loaded 33259 network logs from networkLogs.json
-2025-08-20 20:01:38,621 - INFO - Analyzing behavior...
-2025-08-20 20:02:17,841 - INFO - Enhanced classifier available
-2025-08-20 20:02:17,841 - INFO - Loaded 255 domain categories
-2025-08-20 20:02:17,842 - INFO - Domain Intelligence System integrated successfully
-2025-08-20 20:02:17,842 - INFO - Using enhanced feature extractor and classifier
-2025-08-20 20:02:17,842 - INFO - Initializing Network Behavior Parser...
-2025-08-20 20:02:17,854 - INFO - Enhanced model loaded from behavior_model.pkl
-2025-08-20 20:02:17,854 - INFO - Loaded existing model
-2025-08-20 20:02:17,854 - INFO - Loading network logs from file...
-2025-08-20 20:02:17,968 - INFO - Loaded 33259 network logs from networkLogs.json
-2025-08-20 20:02:17,968 - INFO - Analyzing behavior...
-2025-08-20 20:02:40,806 - WARNING - Domain intelligence analysis failed: tuple indices must be integers or slices, not str
-2025-08-20 20:03:27,365 - INFO - Prediction: entertainment (confidence: 0.360)
-2025-08-20 20:03:27,369 - INFO - Results saved to behavior_results.json
-2025-08-20 20:05:36,976 - INFO - Enhanced classifier available
-2025-08-20 20:05:36,976 - INFO - Loaded 255 domain categories
-2025-08-20 20:05:36,976 - INFO - Domain Intelligence System integrated successfully
-2025-08-20 20:05:36,977 - INFO - Using enhanced feature extractor and classifier
-2025-08-20 20:05:36,977 - INFO - Initializing Network Behavior Parser...
-2025-08-20 20:05:36,987 - INFO - Enhanced model loaded from behavior_model.pkl
-2025-08-20 20:05:36,987 - INFO - Loaded existing model
-2025-08-20 20:05:36,987 - INFO - Loading network logs from file...
-2025-08-20 20:05:37,101 - INFO - Loaded 33259 network logs from networkLogs.json
-2025-08-20 20:05:37,102 - INFO - Analyzing behavior...
-2025-08-20 20:05:37,378 - INFO - Prediction: mixed (confidence: 0.315)
-2025-08-20 20:05:37,379 - INFO - Results saved to behavior_results.json
-2025-08-20 20:05:43,955 - INFO - Enhanced classifier available
-2025-08-20 20:05:43,956 - INFO - Loaded 255 domain categories
-2025-08-20 20:05:43,956 - INFO - Domain Intelligence System integrated successfully
-2025-08-20 20:05:43,956 - INFO - Using enhanced feature extractor and classifier
-2025-08-20 20:05:43,956 - INFO - Initializing Network Behavior Parser...
-2025-08-20 20:05:43,967 - INFO - Enhanced model loaded from behavior_model.pkl
-2025-08-20 20:05:43,967 - INFO - Loaded existing model
-2025-08-20 20:05:43,967 - INFO - Loading network logs from file...
-2025-08-20 20:05:44,085 - INFO - Loaded 33259 network logs from networkLogs.json
-2025-08-20 20:05:44,085 - INFO - Analyzing behavior...
-2025-08-20 20:05:44,374 - INFO - Prediction: mixed (confidence: 0.315)
-2025-08-20 20:05:44,375 - INFO - Results saved to behavior_results.json
-2025-08-20 20:08:05,665 - INFO - Enhanced classifier available
-2025-08-20 20:08:05,666 - INFO - Loaded 255 domain categories
-2025-08-20 20:08:05,666 - INFO - Domain Intelligence System integrated successfully
-2025-08-20 20:08:05,666 - INFO - Using enhanced feature extractor and classifier
-2025-08-20 20:08:05,666 - INFO - Initializing Network Behavior Parser...
-2025-08-20 20:08:05,677 - INFO - Enhanced model loaded from behavior_model.pkl
-2025-08-20 20:08:05,677 - INFO - Loaded existing model
-2025-08-20 20:08:05,677 - INFO - Loading network logs from file...
-2025-08-20 20:08:05,795 - INFO - Loaded 33259 network logs from networkLogs.json
-2025-08-20 20:08:05,795 - INFO - Analyzing behavior...
-2025-08-20 20:08:06,163 - INFO - Prediction: mixed (confidence: 0.310)
-2025-08-20 20:08:06,164 - INFO - Results saved to behavior_results.json
-2025-08-20 20:08:43,172 - INFO - Enhanced classifier available
-2025-08-20 20:08:43,172 - INFO - Loaded 255 domain categories
-2025-08-20 20:08:43,173 - INFO - Domain Intelligence System integrated successfully
-2025-08-20 20:08:43,173 - INFO - Using enhanced feature extractor and classifier
-2025-08-20 20:08:43,173 - INFO - Initializing Network Behavior Parser...
-2025-08-20 20:08:43,184 - INFO - Enhanced model loaded from behavior_model.pkl
-2025-08-20 20:08:43,184 - INFO - Loaded existing model
-2025-08-20 20:08:43,184 - INFO - Loading network logs from file...
-2025-08-20 20:08:43,302 - INFO - Loaded 33259 network logs from networkLogs.json
-2025-08-20 20:08:43,302 - INFO - Analyzing behavior...
-2025-08-20 20:08:43,760 - INFO - Prediction: entertainment (confidence: 0.529)
-2025-08-20 20:08:43,760 - INFO - Results saved to behavior_results.json
-2025-08-20 20:10:05,931 - INFO - Enhanced classifier available
-2025-08-20 20:10:05,932 - INFO - Loaded 255 domain categories
-2025-08-20 20:10:05,932 - INFO - Domain Intelligence System integrated successfully
-2025-08-20 20:10:05,932 - INFO - Using enhanced feature extractor and classifier
-2025-08-20 20:10:05,932 - INFO - Initializing Network Behavior Parser...
-2025-08-20 20:10:05,943 - INFO - Enhanced model loaded from behavior_model.pkl
-2025-08-20 20:10:05,943 - INFO - Loaded existing model
-2025-08-20 20:10:05,943 - INFO - Loading network logs from file...
-2025-08-20 20:10:06,056 - INFO - Loaded 33259 network logs from networkLogs.json
-2025-08-20 20:10:06,056 - INFO - Analyzing behavior...
-2025-08-20 20:10:06,496 - INFO - Prediction: entertainment (confidence: 0.529)
-2025-08-20 20:10:06,497 - INFO - Results saved to behavior_results.json
-2025-08-20 20:13:26,725 - INFO - Enhanced classifier available
-2025-08-20 20:13:26,726 - INFO - Loaded 255 domain categories
-2025-08-20 20:13:26,726 - INFO - Domain Intelligence System integrated successfully
-2025-08-20 20:13:26,726 - INFO - Using enhanced feature extractor and classifier
-2025-08-20 20:13:26,726 - INFO - Initializing Network Behavior Parser...
-2025-08-20 20:13:26,737 - INFO - Enhanced model loaded from behavior_model.pkl
-2025-08-20 20:13:26,737 - INFO - Loaded existing model
-2025-08-20 20:13:26,737 - INFO - Loading network logs from file...
-2025-08-20 20:13:26,738 - INFO - Loaded 112 network logs from networkLogs.json
-2025-08-20 20:13:26,738 - INFO - Analyzing behavior...
-2025-08-20 20:13:26,747 - INFO - Prediction: unethical (confidence: 0.687)
-2025-08-20 20:13:26,748 - INFO - Results saved to behavior_results.json
+2025-10-12 08:20:33,914 - INFO - Enhanced classifier available
+2025-10-12 08:20:33,915 - INFO - Loaded 726 domain categories
+2025-10-12 08:20:33,915 - INFO - Domain Intelligence System integrated successfully
+2025-10-12 08:20:33,915 - INFO - Using enhanced feature extractor and classifier
+2025-10-12 08:20:33,915 - INFO - Initializing Network Behavior Parser...
+2025-10-12 08:20:33,949 - INFO - Enhanced model loaded from behavior_model.pkl
+2025-10-12 08:20:33,949 - INFO - Loaded existing model
+2025-10-12 08:20:33,949 - INFO - Loading network logs from file...
+2025-10-12 08:20:33,949 - INFO - Loaded 30 network logs from networkLogs.json
+2025-10-12 08:20:33,950 - INFO - Analyzing behavior...
+2025-10-12 08:20:33,953 - INFO - Prediction: entertainment (confidence: 0.901)
+2025-10-12 08:20:33,953 - INFO - Results saved to behavior_results.json
+2025-10-12 08:20:54,718 - INFO - Enhanced classifier available
+2025-10-12 08:20:54,719 - INFO - Loaded 726 domain categories
+2025-10-12 08:20:54,719 - INFO - Domain Intelligence System integrated successfully
+2025-10-12 08:20:54,719 - INFO - Using enhanced feature extractor and classifier
+2025-10-12 08:20:54,753 - INFO - Enhanced model loaded from behavior_model.pkl
+2025-10-12 08:20:54,753 - INFO - Loaded existing model
+2025-10-12 08:20:55,545 - INFO - Prediction: mixed (confidence: 0.907)
+2025-10-12 08:29:48,438 - INFO - Enhanced classifier available
+2025-10-12 08:29:48,439 - INFO - Loaded 746 domain categories
+2025-10-12 08:29:48,439 - INFO - Domain Intelligence System integrated successfully
+2025-10-12 08:29:48,439 - INFO - Using enhanced feature extractor and classifier
+2025-10-12 08:29:48,474 - INFO - Enhanced model loaded from behavior_model.pkl
+2025-10-12 08:29:48,475 - INFO - Loaded existing model
+2025-10-12 08:30:36,564 - INFO - Enhanced classifier available
+2025-10-12 08:30:36,579 - INFO - Loaded 1900 training samples
+2025-10-12 08:30:36,579 - INFO - Label distribution: Counter({'work': 450, 'entertainment': 400, 'mixed': 400, 'neutral': 350, 'unethical': 300})
+2025-10-12 08:33:04,093 - INFO - Enhanced classifier available
+2025-10-12 08:33:04,168 - INFO - Created default training data with 1900 samples: training_data.json
+2025-10-12 08:33:04,310 - INFO - Loading training data from external file...
+2025-10-12 08:33:04,327 - INFO - Loaded 1900 training samples from training_data.json
+2025-10-12 08:33:04,333 - INFO - Training samples: 1140
+2025-10-12 08:33:04,333 - INFO - Validation samples: 285
+2025-10-12 08:33:04,334 - INFO - Test samples: 475
+2025-10-12 08:33:04,338 - INFO - Training XGBoost classifier with early stopping...
+2025-10-12 08:33:04,534 - INFO - Training accuracy: 0.237
+2025-10-12 08:33:04,535 - INFO - Validation accuracy: 0.239
+2025-10-12 08:33:04,535 - INFO - Test accuracy: 0.236
+2025-10-12 08:33:04,535 - INFO - Train-Validation gap: -0.002
+2025-10-12 08:33:04,535 - INFO - Train-Test gap: 0.001
+2025-10-12 08:33:04,535 - INFO - ✅ Good generalization: Low train-validation gap
+2025-10-12 08:33:04,535 - WARNING - Model not trained - cannot analyze features
+2025-10-12 08:33:04,745 - INFO - Cross-validation: 0.237 (+/- 0.000)
+2025-10-12 08:33:04,746 - INFO - 
+Classification Report:
+2025-10-12 08:33:04,807 - INFO - Model saved to behavior_model.pkl
+2025-10-12 08:33:50,218 - INFO - Enhanced classifier available
+2025-10-12 08:33:50,219 - INFO - Loading training data from external file...
+2025-10-12 08:33:50,239 - INFO - Loaded 1900 training samples from training_data.json
+2025-10-12 08:33:50,244 - INFO - Training samples: 1140
+2025-10-12 08:33:50,244 - INFO - Validation samples: 285
+2025-10-12 08:33:50,244 - INFO - Test samples: 475
+2025-10-12 08:33:50,250 - INFO - Training XGBoost classifier with early stopping...
+2025-10-12 08:33:50,511 - INFO - Training accuracy: 0.999
+2025-10-12 08:33:50,511 - INFO - Validation accuracy: 0.982
+2025-10-12 08:33:50,512 - INFO - Test accuracy: 0.977
+2025-10-12 08:33:50,512 - INFO - Train-Validation gap: 0.017
+2025-10-12 08:33:50,512 - INFO - Train-Test gap: 0.022
+2025-10-12 08:33:50,512 - INFO - ✅ Good generalization: Low train-validation gap
+2025-10-12 08:33:50,512 - WARNING - Model not trained - cannot analyze features
+2025-10-12 08:33:51,113 - INFO - Cross-validation: 0.982 (+/- 0.007)
+2025-10-12 08:33:51,113 - INFO - 
+Classification Report:
+2025-10-12 08:33:51,185 - INFO - Model saved to behavior_model.pkl
+2025-10-12 08:34:21,161 - INFO - Enhanced classifier available
+2025-10-12 08:34:21,162 - INFO - Loaded 746 domain categories
+2025-10-12 08:34:21,162 - INFO - Domain Intelligence System integrated successfully
+2025-10-12 08:34:21,163 - INFO - Using enhanced feature extractor and classifier
+2025-10-12 08:34:21,197 - INFO - Enhanced model loaded from behavior_model.pkl
+2025-10-12 08:34:21,198 - INFO - Loaded existing model
+2025-10-12 08:34:21,942 - INFO - Prediction: neutral (confidence: 0.390)
+2025-10-12 08:37:17,972 - INFO - Enhanced classifier available
+2025-10-12 08:37:17,973 - INFO - Loaded 746 domain categories
+2025-10-12 08:37:17,973 - INFO - Domain Intelligence System integrated successfully
+2025-10-12 08:37:17,973 - INFO - Using enhanced feature extractor and classifier
+2025-10-12 08:37:18,010 - INFO - Enhanced model loaded from behavior_model.pkl
+2025-10-12 08:37:18,010 - INFO - Loaded existing model
+2025-10-12 08:37:18,697 - INFO - Prediction: neutral (confidence: 0.390)
+2025-10-12 08:39:43,620 - INFO - Enhanced classifier available
+2025-10-12 08:39:43,621 - INFO - Loaded 746 domain categories
+2025-10-12 08:39:43,621 - INFO - Domain Intelligence System integrated successfully
+2025-10-12 08:39:43,622 - INFO - Using enhanced feature extractor and classifier
+2025-10-12 08:39:43,655 - INFO - Enhanced model loaded from behavior_model.pkl
+2025-10-12 08:39:43,656 - INFO - Loaded existing model
+2025-10-12 08:39:44,345 - INFO - Prediction: neutral (confidence: 0.348)
+2025-10-12 08:40:05,043 - INFO - Enhanced classifier available
+2025-10-12 08:40:05,044 - INFO - Loaded 746 domain categories
+2025-10-12 08:40:05,044 - INFO - Domain Intelligence System integrated successfully
+2025-10-12 08:40:05,045 - INFO - Using enhanced feature extractor and classifier
+2025-10-12 08:40:05,079 - INFO - Enhanced model loaded from behavior_model.pkl
+2025-10-12 08:40:05,079 - INFO - Loaded existing model
+2025-10-12 08:40:05,730 - INFO - Prediction: neutral (confidence: 0.348)
+2025-10-12 08:41:41,501 - INFO - Enhanced classifier available
+2025-10-12 08:41:41,502 - INFO - Loaded 746 domain categories
+2025-10-12 08:41:41,502 - INFO - Domain Intelligence System integrated successfully
+2025-10-12 08:41:41,502 - INFO - Using enhanced feature extractor and classifier
+2025-10-12 08:41:41,545 - INFO - Enhanced model loaded from behavior_model.pkl
+2025-10-12 08:41:41,545 - INFO - Loaded existing model
+2025-10-12 08:41:42,217 - INFO - Override: Entertainment is dominant (42.3%)
+2025-10-12 08:41:42,217 - INFO - Final: entertainment (confidence: 0.348)

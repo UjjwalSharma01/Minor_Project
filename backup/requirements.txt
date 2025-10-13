@@ -1,0 +1,27 @@
+# Network Behavior Parser - Dependencies
+# Core ML and data processing
+scikit-learn>=1.3.0
+pandas>=2.0.0
+numpy>=1.24.0
+joblib>=1.3.0
+
+# HTTP requests for API integration
+requests>=2.31.0
+
+xgboost>=1.7.0
+
+# Visualization (optional)
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Optional: Packet capture analysis (uncomment if using Wireshark integration)
+# scapy>=2.5.0
+
+# Optional: Advanced features
+# asyncio-mqtt>=0.11.0  # For MQTT integration
+# streamlit>=1.28.0     # For web dashboard
+
+# Development and testing
+pytest>=7.0.0
+flake8>=6.0.0
+black>=23.0.0

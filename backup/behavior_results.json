@@ -1,0 +1,48 @@
+[
+  {
+    "timestamp": "2025-08-20T20:13:26.747835",
+    "user_id": "065115aa",
+    "behavior": "unethical",
+    "confidence": 0.6871149311899575,
+    "is_anomaly": true,
+    "features": {
+      "total_queries": 112,
+      "unique_domains": 80,
+      "entertainment_pct": 0.05357142857142857,
+      "work_pct": 0.20535714285714285,
+      "unethical_pct": 0.42857142857142855,
+      "neutral_pct": 0.3125,
+      "shopping_pct": 0.0,
+      "pure_entertainment_pct": 0.05357142857142857,
+      "entertainment_tracking_pct": 0.0,
+      "session_duration": 110.91666666666667,
+      "queries_per_minute": 1.0097670924117204,
+      "domain_entropy": 5.752343820137676,
+      "top_domain_concentration": 0.09821428571428571,
+      "blocked_queries_pct": 0.0,
+      "category_diversity": 4,
+      "peak_activity_hour": 10,
+      "weekend_activity": 0.0,
+      "avg_query_length": 12.3125,
+      "query_length_variance": 8.83984375,
+      "social_media_pct": 0.13392857142857142,
+      "streaming_pct": 0.017857142857142856,
+      "dev_tools_pct": 0.044642857142857144,
+      "cloud_services_pct": 0.026785714285714284,
+      "category_counts": {
+        "unethical": 43,
+        "work": 15,
+        "neutral": 48,
+        "entertainment": 6
+      },
+      "top_domains": {
+        "linkedin.com": 11,
+        "indeed.com": 11,
+        "glassdoor.com": 11,
+        "stackoverflow.com": 2,
+        "github.com": 2
+      }
+    },
+    "summary": "User behavior classified as 'unethical' with 68.7% confidence - Top domains: linkedin.com (11 queries), indeed.com (11 queries), glassdoor.com (11 queries)"
+  }
+]

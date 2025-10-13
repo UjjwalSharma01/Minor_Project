@@ -216,15 +216,31 @@ class EnhancedFeatureExtractor:
         if not dns_logs:
             return self._empty_features()
         
-        total_queries = len(dns_logs)
+        # FILTER: Ignore infrastructure/support domains - only analyze user-facing domains
+        infrastructure_keywords = [
+            'firebase', 'crashlytics', 'googleapis.com', 'play.googleapis', 'play-',
+            'doubleclick', 'googlesyndication', 'googleadservices', 'googletagmanager',
+            'app-measurement', 'analytics', 'tracking', 'newrelic', 'branch.io',
+            'appsflyer', 'amplitude', 'mixpanel', 'bugsnag', 'sentry.io', 'cdn.'
+        ]
+        
+        filtered_logs = [
+            log for log in dns_logs 
+            if not any(kw in log.get('domain', '').lower() for kw in infrastructure_keywords)
+        ]
+        
+        if not filtered_logs:
+            return self._empty_features()
+        
+        total_queries = len(filtered_logs)
         
         # Get all domains for context
-        all_domains = [log.get('domain', '') for log in dns_logs if log.get('domain')]
+        all_domains = [log.get('domain', '') for log in filtered_logs if log.get('domain')]
         
         # Use domain intelligence for comprehensive analysis if available
         if self.domain_intelligence:
             try:
-                intelligence_result = self.domain_intelligence.analyze_user_behavior_with_intelligence(dns_logs)
+                intelligence_result = self.domain_intelligence.analyze_user_behavior_with_intelligence(filtered_logs)
                 
                 # Extract enhanced percentages from domain intelligence
                 entertainment_pct = intelligence_result['percentages']['entertainment']
@@ -243,11 +259,11 @@ class EnhancedFeatureExtractor:
             except Exception as e:
                 logger.warning(f"Domain intelligence analysis failed: {e}")
                 # Fall back to basic analysis
-                entertainment_pct, work_pct, unethical_pct, neutral_pct, shopping_pct = self._basic_categorization(dns_logs)
+                entertainment_pct, work_pct, unethical_pct, neutral_pct, shopping_pct = self._basic_categorization(filtered_logs)
                 pure_entertainment_pct = entertainment_tracking_pct = 0
         else:
             # Basic categorization fallback
-            entertainment_pct, work_pct, unethical_pct, neutral_pct, shopping_pct = self._basic_categorization(dns_logs)
+            entertainment_pct, work_pct, unethical_pct, neutral_pct, shopping_pct = self._basic_categorization(filtered_logs)
             pure_entertainment_pct = entertainment_tracking_pct = 0
         
         # Domain analysis
@@ -622,10 +638,28 @@ class EnhancedBehaviorClassifier:
             behavior = self.label_encoder.inverse_transform([prediction])[0]
             confidence = np.max(probabilities)
             
+            # POST-PROCESSING: Override classification based on dominant category
+            ent_pct = features.get('entertainment_pct', 0)
+            work_pct = features.get('work_pct', 0)
+            unethical_pct = features.get('unethical_pct', 0)
+            
+            # If entertainment is clearly dominant (>35%), classify as entertainment
+            if ent_pct > 0.35 and ent_pct > work_pct and ent_pct > unethical_pct:
+                behavior = 'entertainment'
+                logger.info(f"Override: Entertainment is dominant ({ent_pct:.1%})")
+            # If work is clearly dominant (>40%), classify as work
+            elif work_pct > 0.40 and work_pct > ent_pct:
+                behavior = 'work'
+                logger.info(f"Override: Work is dominant ({work_pct:.1%})")
+            # If unethical is significant (>20%), classify as unethical
+            elif unethical_pct > 0.20:
+                behavior = 'unethical'
+                logger.info(f"Override: Unethical activity detected ({unethical_pct:.1%})")
+            
             # Enhanced anomaly detection based on feature patterns
             is_anomaly = self._detect_anomaly(features)
             
-            logger.info(f"Prediction: {behavior} (confidence: {confidence:.3f})")
+            logger.info(f"Final: {behavior} (confidence: {confidence:.3f})")
             
             return behavior, confidence, is_anomaly
             

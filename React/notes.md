@@ -1,0 +1,1 @@
+if something is already present in the react root react will overwrite it and will inject whatever the code you pass into it
