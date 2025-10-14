@@ -99,3 +99,23 @@ Classification Report:
 2025-10-12 08:41:41,545 - INFO - Loaded existing model
 2025-10-12 08:41:42,217 - INFO - Override: Entertainment is dominant (42.3%)
 2025-10-12 08:41:42,217 - INFO - Final: entertainment (confidence: 0.348)
+2025-10-14 13:29:14,707 - INFO - Enhanced classifier available
+2025-10-14 13:29:17,087 - INFO - Loaded 746 domain categories
+2025-10-14 13:29:17,088 - INFO - Domain Intelligence System integrated successfully
+2025-10-14 13:29:17,088 - INFO - Using enhanced feature extractor and classifier
+2025-10-14 13:29:17,305 - INFO - Enhanced model loaded from behavior_model.pkl
+2025-10-14 13:29:17,305 - INFO - Loaded existing model
+2025-10-14 13:29:17,406 - INFO - Loaded 36240 network logs from networkLogs.json
+2025-10-14 13:29:18,067 - INFO - Override: Entertainment is dominant (42.3%)
+2025-10-14 13:29:18,068 - INFO - Final: entertainment (confidence: 0.348)
+2025-10-14 13:29:18,069 - INFO - Results saved to behavior_results.json
+2025-10-14 13:39:48,757 - INFO - Enhanced classifier available
+2025-10-14 13:39:51,142 - INFO - Loaded 746 domain categories
+2025-10-14 13:39:51,142 - INFO - Domain Intelligence System integrated successfully
+2025-10-14 13:39:51,143 - INFO - Using enhanced feature extractor and classifier
+2025-10-14 13:39:51,177 - INFO - Enhanced model loaded from behavior_model.pkl
+2025-10-14 13:39:51,177 - INFO - Loaded existing model
+2025-10-14 13:39:51,237 - INFO - Loaded 36240 network logs from networkLogs.json
+2025-10-14 13:39:51,848 - INFO - Override: Entertainment is dominant (42.3%)
+2025-10-14 13:39:51,848 - INFO - Final: entertainment (confidence: 0.348)
+2025-10-14 13:39:51,849 - INFO - Results saved to behavior_results.json
