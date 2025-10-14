@@ -1,34 +1,32 @@
 'use client'
 
+import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { useRouter } from 'next/navigation'
 import { 
   Shield,
-  Upload,
-  BarChart3,
-  Users,
-  AlertTriangle,
-  Mail,
-  Sparkles
+  Database,
+  Sparkles,
+  MessageSquare
 } from 'lucide-react'
 import ProtectedRoute from '@/components/protected-route'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { useAuth } from '@/lib/auth-context'
 import MainChatComponent from '@/components/main-chat-component'
+import AirtableViewer from '@/components/airtable-viewer'
 import { SimpleParticles, GlassCard } from '@/components/animated-particles'
 import { PremiumButton, InteractiveCard, AnimatedIcon } from '@/components/premium-interactions'
 
 const quickActions = [
-  { name: 'Upload Network Logs', icon: Upload, href: '/dashboard/upload', color: 'blue' },
-  { name: 'Analytics Dashboard', icon: BarChart3, href: '/dashboard/analytics', color: 'green' },
-  { name: 'View Results', icon: Shield, href: '/dashboard/results', color: 'purple' },
-  { name: 'Manage Employees', icon: Users, href: '/dashboard/employees', color: 'indigo' },
-  { name: 'Alert System', icon: Mail, href: '/dashboard/alerts', color: 'yellow' },
+  { name: 'Smart Processor', icon: MessageSquare, view: 'chat', color: 'teal' },
+  { name: 'Database Viewer', icon: Database, view: 'database', color: 'cyan' },
 ]
 
 export default function DashboardPage() {
   const { user, logout } = useAuth()
-  const router = useRouter()
+  const [activeView, setActiveView] = useState('chat')
+  const [tableName, setTableName] = useState('Main Table')
+  // Base ID from environment variable (token is scoped to this specific base)
+  const baseId = process.env.NEXT_PUBLIC_AIRTABLE_BASE_ID
 
   const handleLogout = async () => {
     try {
@@ -109,7 +107,9 @@ export default function DashboardPage() {
                         Welcome back! 👋
                       </h1>
                       <p className="text-gray-600 dark:text-gray-300 mt-2">
-                        Send your queries to our Smart Processor for instant analysis and insights.
+                        {activeView === 'chat' 
+                          ? 'Send your queries to our Smart Processor for instant analysis and insights.'
+                          : 'View and manage your database records from Airtable.'}
                       </p>
                     </div>
                   </div>
@@ -128,7 +128,7 @@ export default function DashboardPage() {
               >
                 <GlassCard hover={false} className="p-6">
                   <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                    Quick Actions
+                    Navigation
                   </h2>
                   <div className="space-y-2">
                     {quickActions.map((action, index) => (
@@ -139,13 +139,21 @@ export default function DashboardPage() {
                         transition={{ delay: 0.3 + index * 0.1 }}
                       >
                         <InteractiveCard
-                          onClick={() => router.push(action.href)}
+                          onClick={() => setActiveView(action.view)}
                           withTilt={false}
-                          className="cursor-pointer"
+                          className={`cursor-pointer transition-all ${
+                            activeView === action.view 
+                              ? 'ring-2 ring-teal-500 bg-teal-500/10' 
+                              : ''
+                          }`}
                         >
                           <div className="flex items-center space-x-3 p-3">
                             <motion.div 
-                              className="w-10 h-10 rounded-xl flex items-center justify-center bg-gradient-to-br from-teal-600 to-cyan-600 shadow-md shadow-teal-500/30"
+                              className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-md ${
+                                activeView === action.view
+                                  ? 'bg-gradient-to-br from-teal-500 to-cyan-500 shadow-teal-500/50'
+                                  : 'bg-gradient-to-br from-teal-600 to-cyan-600 shadow-teal-500/30'
+                              }`}
                               whileHover={{ rotate: [0, -10, 10, 0] }}
                               transition={{ duration: 0.3 }}
                             >
@@ -159,18 +167,56 @@ export default function DashboardPage() {
                       </motion.div>
                     ))}
                   </div>
+
+                  {/* Database Configuration Form */}
+                  {activeView === 'database' && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700"
+                    >
+                      <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
+                        Table Settings
+                      </h3>
+                      <div className="space-y-3">
+                        <div>
+                          <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            Table Name
+                          </label>
+                          <input
+                            type="text"
+                            value={tableName}
+                            onChange={(e) => setTableName(e.target.value)}
+                            placeholder="Main Table"
+                            className="w-full px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none"
+                          />
+                          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                            Enter the exact table name from your Airtable base
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
                 </GlassCard>
               </motion.div>
 
-              {/* Main Chat Component */}
+              {/* Main Content Area */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
                 className="lg:col-span-3"
-                style={{ height: '600px', maxHeight: '600px' }}
               >
-                <MainChatComponent />
+                {activeView === 'chat' ? (
+                  <div style={{ height: '600px', maxHeight: '600px' }}>
+                    <MainChatComponent />
+                  </div>
+                ) : (
+                  <GlassCard hover={false} className="p-6">
+                    <AirtableViewer baseId={baseId} tableName={tableName} />
+                  </GlassCard>
+                )}
               </motion.div>
             </div>
           </div>

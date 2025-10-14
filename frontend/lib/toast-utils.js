@@ -1,7 +1,7 @@
 'use client'
 
 import toast from 'react-hot-toast'
-import { triggerSuccessConfetti } from './premium-interactions'
+import { triggerSuccessConfetti } from '@/components/premium-interactions'
 
 // Success toast with confetti
 export const showSuccessToast = (message, withConfetti = true) => {
