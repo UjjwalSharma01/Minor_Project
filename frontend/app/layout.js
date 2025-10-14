@@ -3,6 +3,7 @@ import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
 import { AuthProvider } from '@/lib/auth-context'
 import ToastProvider from '@/components/toast-provider'
+import { CustomCursor, GlowCursor } from '@/components/custom-cursor'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -22,6 +23,8 @@ export default function RootLayout({ children }) {
           disableTransitionOnChange
         >
           <AuthProvider>
+            <CustomCursor />
+            <GlowCursor />
             {children}
             <ToastProvider />
           </AuthProvider>
