@@ -87,10 +87,11 @@ module.exports = {
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-        // Professional gradients
-        'gradient-primary': 'linear-gradient(135deg, #64748b 0%, #475569 100%)',
-        'gradient-accent': 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-        'gradient-brand': 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+        // Professional gradients - Teal & Amber theme
+        'gradient-primary': 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)',
+        'gradient-accent': 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+        'gradient-brand': 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)',
+        'gradient-hero': 'linear-gradient(135deg, #14b8a6 0%, #06b6d4 50%, #0d9488 100%)',
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
