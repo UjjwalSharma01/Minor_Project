@@ -20,10 +20,61 @@ export const LoadingSpinner = ({ size = 'md', text = 'Loading...' }) => {
   )
 }
 
-// Skeleton Loading Component
-export const SkeletonLoader = ({ className = '', children }) => (
-  <div className={`animate-pulse bg-slate-200 dark:bg-slate-700 rounded ${className}`}>
+// Enhanced Skeleton Loading Component with Shimmer
+export const SkeletonLoader = ({ className = '', children, withShimmer = true }) => (
+  <div className={`relative overflow-hidden bg-slate-200 dark:bg-slate-700 rounded ${className}`}>
     {children}
+    {withShimmer && (
+      <motion.div
+        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 dark:via-white/10 to-transparent"
+        animate={{
+          x: ['-100%', '100%']
+        }}
+        transition={{
+          duration: 1.5,
+          repeat: Infinity,
+          ease: 'easeInOut'
+        }}
+      />
+    )}
+  </div>
+)
+
+// Card Skeleton with premium shimmer effect
+export const CardSkeleton = () => (
+  <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+    <div className="space-y-4">
+      <SkeletonLoader className="h-8 w-3/4" />
+      <SkeletonLoader className="h-4 w-full" />
+      <SkeletonLoader className="h-4 w-5/6" />
+      <div className="flex gap-2 mt-4">
+        <SkeletonLoader className="h-10 w-24 rounded-lg" />
+        <SkeletonLoader className="h-10 w-24 rounded-lg" />
+      </div>
+    </div>
+  </div>
+)
+
+// Dashboard Card Skeleton
+export const DashboardCardSkeleton = () => (
+  <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+    <div className="flex items-start justify-between mb-4">
+      <div className="flex-1">
+        <SkeletonLoader className="h-4 w-24 mb-2" />
+        <SkeletonLoader className="h-8 w-32" />
+      </div>
+      <SkeletonLoader className="h-12 w-12 rounded-xl" />
+    </div>
+    <SkeletonLoader className="h-3 w-full" />
+  </div>
+)
+
+// Table Row Skeleton
+export const TableRowSkeleton = ({ columns = 4 }) => (
+  <div className="flex items-center gap-4 p-4 border-b border-gray-200 dark:border-gray-700">
+    {Array.from({ length: columns }).map((_, i) => (
+      <SkeletonLoader key={i} className="h-4 flex-1" />
+    ))}
   </div>
 )
 
