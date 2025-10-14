@@ -31,6 +31,22 @@ export default function MainChatComponent() {
     if (!inputMessage.trim() || isLoading) return
 
     const userMessage = inputMessage.trim()
+    
+    // Validate that message contains at least one email address
+    const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/
+    const hasEmail = emailRegex.test(userMessage)
+    
+    if (!hasEmail) {
+      // Show error message without sending to webhook
+      setError('⚠️ Please include an email address in your message.')
+      const errorMessages = [...messages, 
+        { role: 'user', content: userMessage },
+        { role: 'assistant', content: '⚠️ Please include an email address in your message. The email can be anywhere in your text, but it\'s required to process your request.' }
+      ]
+      setMessages(errorMessages)
+      return
+    }
+    
     setInputMessage('')
     setIsLoading(true)
     setError(null)
