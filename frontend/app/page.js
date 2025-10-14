@@ -48,7 +48,7 @@ export default function HomePage() {
             <div className="flex items-center space-x-3">
               <Shield className="h-8 w-8 text-slate-700 dark:text-slate-300" />
               <span className="text-xl font-bold text-gray-900 dark:text-white">
-                FocusGuard ML
+                InsightNet
               </span>
             </div>
             <div className="flex items-center space-x-4">
@@ -179,13 +179,13 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="flex items-center justify-center space-x-3 mb-4">
             <Shield className="h-6 w-6 text-slate-400" />
-            <span className="text-lg font-semibold">FocusGuard ML</span>
+            <span className="text-lg font-semibold">InsightNet</span>
           </div>
           <p className="text-gray-400 mb-4">
             Premium AI-powered network log analysis for modern enterprises
           </p>
           <p className="text-sm text-gray-500">
-            © 2025 FocusGuard ML. All rights reserved.
+            © 2025 InsightNet. All rights reserved.
           </p>
         </div>
       </footer>

@@ -47,6 +47,48 @@ export default function MainChatComponent() {
       return
     }
     
+    // Check if message contains behavior data with majority "work" activities
+    try {
+      // Try to parse JSON from the message
+      const jsonMatch = userMessage.match(/\[[\s\S]*\]/);
+      if (jsonMatch) {
+        const behaviorData = JSON.parse(jsonMatch[0]);
+        
+        // Check if it's an array and has behavior data
+        if (Array.isArray(behaviorData) && behaviorData.length > 0) {
+          const firstEntry = behaviorData[0];
+          
+          // Check if majority of queries are work-related
+          if (firstEntry.features && firstEntry.features.work_pct) {
+            const workPercentage = firstEntry.features.work_pct;
+            
+            // If work percentage is above 50%, don't send to database
+            if (workPercentage > 0.5) {
+              const workMessages = [...messages,
+                { role: 'user', content: userMessage },
+                { role: 'assistant', content: `✅ Data processed successfully!\n\n📊 Analysis Result: The user's activities show ${(workPercentage * 100).toFixed(1)}% work-related queries.\n\n✉️ No email alert sent - The majority of the user's queries are related to work activities, which is expected behavior. The data was not flagged for database storage or email notification.` }
+              ]
+              setMessages(workMessages)
+              return
+            }
+          }
+          
+          // Also check behavior classification
+          if (firstEntry.behavior === 'work') {
+            const workMessages = [...messages,
+              { role: 'user', content: userMessage },
+              { role: 'assistant', content: `✅ Data processed successfully!\n\n📊 Analysis Result: User behavior classified as "work" activities.\n\n✉️ No email alert sent - The user's queries are primarily work-related, which is normal and expected behavior. The data was not flagged for database storage or email notification.` }
+            ]
+            setMessages(workMessages)
+            return
+          }
+        }
+      }
+    } catch (parseError) {
+      // If JSON parsing fails, continue with normal processing
+      console.log('No behavior data detected, proceeding with normal processing')
+    }
+    
     setInputMessage('')
     setIsLoading(true)
     setError(null)

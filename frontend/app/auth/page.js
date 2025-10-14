@@ -66,7 +66,7 @@ export default function AuthPage() {
           <div className="flex items-center justify-center space-x-3 mb-4">
             <Shield className="h-12 w-12 text-slate-700 dark:text-slate-300" />
             <span className="text-2xl font-bold text-gray-900 dark:text-white">
-              FocusGuard ML
+              InsightNet
             </span>
           </div>
           <p className="text-gray-600 dark:text-gray-300">

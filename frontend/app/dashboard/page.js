@@ -46,7 +46,7 @@ export default function DashboardPage() {
               <div className="flex items-center space-x-3">
                 <Shield className="h-8 w-8 text-slate-700 dark:text-slate-300" />
                 <span className="text-xl font-bold text-gray-900 dark:text-white">
-                  FocusGuard ML Dashboard
+                  InsightNet Dashboard
                 </span>
               </div>
               <div className="flex items-center space-x-4">

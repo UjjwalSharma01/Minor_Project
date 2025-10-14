@@ -6,7 +6,7 @@ import { AuthProvider } from '@/lib/auth-context'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'FocusGuard ML - Converting network logs into actional insights',
+  title: 'InsightNet - Converting network logs into actionable insights',
   description: 'Premium AI platform for network log analysis and employee behavior monitoring with automated alerts and comprehensive reporting.',
 }
 
