@@ -419,7 +419,7 @@ export default function MainChatComponent() {
 
       {/* Input Container */}
       <div className="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4">
-        <div className="flex items-end space-x-2">
+        <div className="flex items-center space-x-2">
           {/* Text Input */}
           <div className="flex-1 relative">
             <textarea
@@ -442,7 +442,7 @@ export default function MainChatComponent() {
           <button
             onClick={sendMessage}
             disabled={!inputMessage.trim() || isLoading}
-            className="px-5 py-3 bg-slate-700 hover:bg-slate-800 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-xl transition-all duration-200 hover:scale-105 disabled:hover:scale-100 flex items-center space-x-2 font-medium"
+            className="h-[52px] px-5 bg-slate-700 hover:bg-slate-800 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-xl transition-all duration-200 hover:scale-105 disabled:hover:scale-100 flex items-center justify-center space-x-2 font-medium flex-shrink-0"
           >
             {isLoading ? (
               <Loader2 className="h-5 w-5 animate-spin" />
