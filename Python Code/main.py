@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """
-Network Behavior Parser - ML-based DNS log analysis for employee behavior classification
-Author: AI Assistant
+InsightNet - Network Behavior Analysis System
+ML-based DNS log analysis for employee behavior classification
+
+Author: Ujjwal Sharma
+Project: InsightNet - Converting network logs into actionable insights
 Version: 1.0
 """
 
@@ -19,7 +22,7 @@ warnings.filterwarnings('ignore')
 
 # ML imports
 from sklearn.ensemble import IsolationForest
-from sklearn.model_selection import train_test_split, cross_val_score, StratifiedKFold
+from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.metrics import classification_report, accuracy_score
 import xgboost as xgb
