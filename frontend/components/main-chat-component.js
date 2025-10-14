@@ -442,7 +442,7 @@ export default function MainChatComponent() {
           <button
             onClick={sendMessage}
             disabled={!inputMessage.trim() || isLoading}
-            className="h-[52px] px-5 bg-slate-700 hover:bg-slate-800 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-xl transition-all duration-200 hover:scale-105 disabled:hover:scale-100 flex items-center justify-center space-x-2 font-medium flex-shrink-0"
+            className="h-[54px] px-5 bg-slate-700 hover:bg-slate-800 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-xl transition-all duration-200 hover:scale-105 disabled:hover:scale-100 flex items-center justify-center space-x-2 font-medium flex-shrink-0"
           >
             {isLoading ? (
               <Loader2 className="h-5 w-5 animate-spin" />

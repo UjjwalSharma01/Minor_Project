@@ -10,9 +10,6 @@ import logging
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
-import requests
-import threading
-import time
 from typing import Dict, List, Tuple, Optional
 import hashlib
 from collections import Counter, defaultdict
@@ -21,12 +18,10 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # ML imports
-from sklearn.ensemble import RandomForestClassifier, IsolationForest
+from sklearn.ensemble import IsolationForest
 from sklearn.model_selection import train_test_split, cross_val_score, StratifiedKFold
 from sklearn.preprocessing import StandardScaler, LabelEncoder
-from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
-import matplotlib.pyplot as plt
-import seaborn as sns
+from sklearn.metrics import classification_report, accuracy_score
 import xgboost as xgb
 
 # Setup logging
@@ -71,119 +66,15 @@ class DomainCategorizer:
             self.create_default_categories()
     
     def create_default_categories(self):
-        """Create default domain categories and save to file"""
+        """Create minimal default domain categories if file doesn't exist"""
+        # Create a minimal set of default categories
+        # The main domain database should be in domain_categories.json (746+ domains)
         default_categories = {
-            # Entertainment domains
+            # Just a few essential domains as fallback
             'youtube.com': 'entertainment',
-            'netflix.com': 'entertainment',
-            'tiktok.com': 'entertainment',
-            'twitch.tv': 'entertainment',
-            'spotify.com': 'entertainment',
-            'instagram.com': 'entertainment',
-            'facebook.com': 'entertainment',
-            'twitter.com': 'entertainment',
-            'reddit.com': 'entertainment',
-            'steam.com': 'entertainment',
-            'discord.com': 'entertainment',
-            'snapchat.com': 'entertainment',
-            'pinterest.com': 'entertainment',
-            'hulu.com': 'entertainment',
-            'disneyplus.com': 'entertainment',
-            'primevideo.com': 'entertainment',
-            'gaming.youtube.com': 'entertainment',
-            'epicgames.com': 'entertainment',
-            'battle.net': 'entertainment',
-            'twitch.tv': 'entertainment',
-            'origin.com': 'entertainment',
-            'ubisoft.com': 'entertainment',
-            'rockstargames.com': 'entertainment',
-            'ea.com': 'entertainment',
-            'riotgames.com': 'entertainment',
-            
-            # Work-related domains
             'github.com': 'work',
-            'stackoverflow.com': 'work',
-            'aws.amazon.com': 'work',
-            'console.aws.amazon.com': 'work',
-            'azure.microsoft.com': 'work',
-            'cloud.google.com': 'work',
-            'docs.google.com': 'work',
-            'drive.google.com': 'work',
-            'gmail.com': 'work',
-            'outlook.com': 'work',
-            'slack.com': 'work',
-            'teams.microsoft.com': 'work',
-            'zoom.us': 'work',
-            'atlassian.com': 'work',
-            'jira.com': 'work',
-            'confluence.com': 'work',
-            'docker.com': 'work',
-            'jenkins.io': 'work',
-            'kubernetes.io': 'work',
-            'apache.org': 'work',
-            'mongodb.com': 'work',
-            'postgresql.org': 'work',
-            'mysql.com': 'work',
-            'npmjs.com': 'work',
-            'pypi.org': 'work',
-            'maven.apache.org': 'work',
-            'bitbucket.org': 'work',
-            'gitlab.com': 'work',
-            'codepen.io': 'work',
-            'replit.com': 'work',
-            'heroku.com': 'work',
-            'vercel.com': 'work',
-            'netlify.com': 'work',
-            'digitalocean.com': 'work',
-            
-            # Unethical/Job hunting domains
-            'indeed.com': 'unethical',
             'linkedin.com': 'unethical',
-            'monster.com': 'unethical',
-            'glassdoor.com': 'unethical',
-            'dice.com': 'unethical',
-            'careerbuilder.com': 'unethical',
-            'ziprecruiter.com': 'unethical',
-            'simplyhired.com': 'unethical',
-            'angel.co': 'unethical',
-            'upwork.com': 'unethical',
-            'freelancer.com': 'unethical',
-            'fiverr.com': 'unethical',
-            'toptal.com': 'unethical',
-            'remotework.com': 'unethical',
-            'weworkremotely.com': 'unethical',
-            'jobs.com': 'unethical',
-            'careerjet.com': 'unethical',
-            'jobstreet.com': 'unethical',
-            'seek.com': 'unethical',
-            'workable.com': 'unethical',
-            'lever.co': 'unethical',
-            'greenhouse.io': 'unethical',
-            'bamboohr.com': 'unethical',
-            '99designs.com': 'unethical',
-            'peopleperhour.com': 'unethical',
-            
-            # Neutral domains
-            'google.com': 'neutral',
-            'bing.com': 'neutral',
-            'yahoo.com': 'neutral',
-            'wikipedia.org': 'neutral',
-            'weather.com': 'neutral',
-            'cnn.com': 'neutral',
-            'bbc.com': 'neutral',
-            'microsoft.com': 'neutral',
-            'apple.com': 'neutral',
-            'amazon.com': 'neutral',
-            'news.google.com': 'neutral',
-            'reuters.com': 'neutral',
-            'npr.org': 'neutral',
-            'techcrunch.com': 'neutral',
-            'arstechnica.com': 'neutral',
-            'medium.com': 'neutral',
-            'dropbox.com': 'neutral',
-            'onedrive.live.com': 'neutral',
-            'icloud.com': 'neutral',
-            'duckduckgo.com': 'neutral'
+            'google.com': 'neutral'
         }
         
         self.domain_categories = default_categories
@@ -191,7 +82,7 @@ class DomainCategorizer:
         # Save to file
         with open(self.domain_categories_file, 'w') as f:
             json.dump(default_categories, f, indent=2)
-        logger.info(f"Created default domain categories file: {self.domain_categories_file}")
+        logger.warning(f"Created minimal fallback domain categories. Please use domain_categories.json with full 746+ domain database.")
     
     def add_domain(self, domain: str, category: str):
         """Add a domain to the categorization database"""
@@ -706,43 +597,10 @@ class BehaviorClassifier:
         self.is_trained = model_data['is_trained']
         logger.info(f"Model loaded from {filepath}")
 
-class NextDNSClient:
-    """Client for NextDNS API integration"""
-    
-    def __init__(self, api_key: str, profile_id: str):
-        self.api_key = api_key
-        self.profile_id = profile_id
-        self.base_url = "https://api.nextdns.io"
-        self.session = requests.Session()
-        self.session.headers.update({
-            'X-Api-Key': api_key,
-            'Content-Type': 'application/json'
-        })
-    
-    def get_logs(self, limit: int = 1000, since: Optional[str] = None) -> List[Dict]:
-        """Fetch DNS logs from NextDNS API"""
-        try:
-            url = f"{self.base_url}/profiles/{self.profile_id}/logs"
-            params = {'limit': limit}
-            if since:
-                params['since'] = since
-            
-            response = self.session.get(url, params=params)
-            response.raise_for_status()
-            
-            logs = response.json().get('data', [])
-            logger.info(f"Fetched {len(logs)} DNS logs from NextDNS")
-            return logs
-            
-        except Exception as e:
-            logger.error(f"Failed to fetch NextDNS logs: {e}")
-            return []
-
 class NetworkBehaviorParser:
     """Main class for network behavior analysis with file-based input"""
     
-    def __init__(self, nextdns_api_key: str = None, nextdns_profile_id: str = None,
-                 network_logs_file: str = 'networkLogs.json',
+    def __init__(self, network_logs_file: str = 'networkLogs.json',
                  domain_categories_file: str = 'domain_categories.json',
                  training_data_file: str = 'training_data.json'):
         
@@ -756,13 +614,7 @@ class NetworkBehaviorParser:
             self.classifier = BehaviorClassifier(training_data_file)
             logger.info("Using basic feature extractor and classifier")
             
-        self.nextdns_client = None
         self.network_logs_file = network_logs_file
-        
-        if nextdns_api_key and nextdns_profile_id:
-            self.nextdns_client = NextDNSClient(nextdns_api_key, nextdns_profile_id)
-        
-        self.running = False
         self.results_history = []
     
     def initialize(self):
@@ -828,56 +680,6 @@ class NetworkBehaviorParser:
         
         return summary
     
-    def start_monitoring(self, interval_minutes: int = 5):
-        """Start real-time monitoring"""
-        if not self.nextdns_client:
-            logger.error("NextDNS client not configured")
-            return
-        
-        self.running = True
-        logger.info(f"Starting monitoring with {interval_minutes}-minute intervals")
-        
-        last_check = datetime.now() - timedelta(minutes=interval_minutes)
-        
-        while self.running:
-            try:
-                # Fetch recent logs
-                since = last_check.isoformat()
-                logs = self.nextdns_client.get_logs(limit=1000, since=since)
-                
-                if logs:
-                    # Group logs by user/IP
-                    user_logs = defaultdict(list)
-                    for log in logs:
-                        user_id = log.get('client_ip', 'unknown')
-                        user_logs[user_id].append(log)
-                    
-                    # Analyze each user's behavior
-                    for user_id, user_log_list in user_logs.items():
-                        if len(user_log_list) > 5:  # Minimum threshold
-                            result = self.analyze_logs(user_log_list, interval_minutes)
-                            logger.info(f"User {result['user_id']}: {result['summary']}")
-                            
-                            # Log alerts for concerning behavior
-                            if result['behavior'] == 'unethical' or result['is_anomaly']:
-                                logger.warning(f"ALERT - {result['summary']}")
-                
-                last_check = datetime.now()
-                time.sleep(interval_minutes * 60)
-                
-            except KeyboardInterrupt:
-                logger.info("Monitoring stopped by user")
-                break
-            except Exception as e:
-                logger.error(f"Error in monitoring loop: {e}")
-                time.sleep(30)
-        
-        self.running = False
-    
-    def stop_monitoring(self):
-        """Stop monitoring"""
-        self.running = False
-    
     def load_network_logs(self) -> List[Dict]:
         """Load network logs from JSON file"""
         try:
@@ -901,27 +703,6 @@ class NetworkBehaviorParser:
         except Exception as e:
             logger.error(f"Unexpected error loading network logs: {e}")
             return []
-    def generate_sample_logs(self, n_logs: int = 100) -> List[Dict]:
-        """Generate sample DNS logs for testing (fallback method)"""
-        np.random.seed(42)
-        
-        # Sample domains from our categorizer
-        domains = list(self.feature_extractor.categorizer.domain_categories.keys())
-        
-        logs = []
-        base_time = datetime.now()
-        
-        for i in range(n_logs):
-            log = {
-                'timestamp': (base_time + timedelta(seconds=i*30)).isoformat(),
-                'domain': np.random.choice(domains),
-                'client_ip': f"192.168.1.{np.random.randint(10, 50)}",
-                'query_type': 'A',
-                'response_code': 'NOERROR'
-            }
-            logs.append(log)
-        
-        return logs
     
     def save_results(self, filepath: str = 'behavior_results.json'):
         """Save analysis results to file"""
@@ -947,8 +728,8 @@ def main():
     network_logs = parser.load_network_logs()
     
     if not network_logs:
-        logger.warning("No network logs found. Generating sample logs for demo...")
-        network_logs = parser.generate_sample_logs(150)
+        logger.error("No network logs found. Please provide networkLogs.json file.")
+        return
     
     # Analyze behavior
     logger.info("Analyzing behavior...")
