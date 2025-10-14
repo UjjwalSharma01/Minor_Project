@@ -1,10 +1,22 @@
 # 🎓 Complete Beginner's Guide to Network Behavior Analysis Project
 ## For Students with NO Machine Learning Background
 
-**Last Updated:** October 14, 2025  
+**Last Updated:** October 14, 2025 (Architecture Updated: Removed Basic Classifier)  
 **Target Audience:** Complete Beginners  
 **Time to Read:** 60-90 minutes  
 **Project Name:** InsightNet - Network Behavior Analysis System
+
+---
+
+## 🚨 IMPORTANT UPDATE (October 2025)
+
+**Major Architecture Change:**
+- ❌ **Removed:** Basic classifier (10 features, Random Forest)
+- ✅ **Now:** Enhanced XGBoost classifier ONLY (23 features)
+- 🎯 **Reason:** XGBoost has better generalization, less overfitting
+- 📊 **Impact:** Consistent algorithm throughout (important for research paper)
+
+If you're reading old tutorials or code examples that mention "Basic Classifier" or show `if ENHANCED_AVAILABLE:` logic, those are **OUTDATED**. This guide reflects the current architecture.
 
 ---
 
@@ -373,22 +385,24 @@ Here's what happens when you run our project:
 └─────────────────────────────────────────────────────────────┘
                             ↓
 ┌─────────────────────────────────────────────────────────────┐
-│  Step 3: FEATURE EXTRACTION                                 │
-│  🔍 enhanced_classifier.py                                  │
-│  Extracts 20+ features from the data                        │
-│  (entertainment %, work %, social media %, etc.)            │
+│  Step 3: ENHANCED FEATURE EXTRACTION                        │
+│  🔍 enhanced_classifier.py (EnhancedFeatureExtractor)       │
+│  Extracts 23 advanced features with Domain Intelligence    │
+│  (entertainment %, work %, social media %, streaming %,     │
+│   pure entertainment %, tracking %, etc.)                   │
 └─────────────────────────────────────────────────────────────┘
                             ↓
 ┌─────────────────────────────────────────────────────────────┐
-│  Step 4: ML PREDICTION                                      │
-│  🤖 Machine Learning Model                                  │
+│  Step 4: XGBOOST ML PREDICTION                              │
+│  🤖 Enhanced XGBoost Classifier                             │
+│  Uses 23 features + Domain Intelligence                     │
 │  Predicts behavior: "ENTERTAINMENT"                         │
-│  Confidence: 34.8%                                          │
+│  Confidence: 42.5%                                          │
 └─────────────────────────────────────────────────────────────┘
                             ↓
 ┌─────────────────────────────────────────────────────────────┐
 │  Step 5: ANOMALY DETECTION                                  │
-│  ⚠️  Isolation Forest                                       │
+│  ⚠️  Isolation Forest + Pattern Analysis                    │
 │  Checks: Is this behavior unusual?                          │
 │  Result: YES - ANOMALY DETECTED                             │
 └─────────────────────────────────────────────────────────────┘
@@ -401,6 +415,23 @@ Here's what happens when you run our project:
 │  - ANALYSIS_SUMMARY.md                                      │
 └─────────────────────────────────────────────────────────────┘
 ```
+
+### 🎯 Key Architecture Decision
+
+**Important:** This project **exclusively uses the Enhanced XGBoost Classifier**. 
+
+We initially experimented with two approaches:
+- **Basic Classifier** (10 features, Random Forest - DEPRECATED)
+- **Enhanced Classifier** (23 features, XGBoost - CURRENT)
+
+**Why we removed the basic classifier:**
+1. **Random Forest showed overfitting** with limited training data
+2. **XGBoost has superior generalization** and built-in regularization
+3. **Enhanced features provide better accuracy** through domain intelligence
+4. **Consistency:** One algorithm (XGBoost) throughout the entire system
+5. **Research focus:** Our paper emphasizes XGBoost as the core solution
+
+The enhanced classifier automatically augments missing features from old training data, ensuring backward compatibility while providing state-of-the-art performance.
 
 ---
 
@@ -518,9 +549,9 @@ Python Code/
 │
 ├── 🤖 CORE PYTHON SCRIPTS
 │   ├── csv_to_json_converter.py      # Step 1: Convert CSV to JSON
-│   ├── main.py                       # Step 2: Main analysis engine
-│   ├── enhanced_classifier.py        # Step 3: Advanced ML classifier
-│   └── run_analysis.py               # Step 4: Orchestrator (runs everything)
+│   ├── enhanced_classifier.py        # Step 2: Enhanced XGBoost Classifier (23 features)
+│   ├── main.py                       # Step 3: Main orchestrator (uses enhanced classifier)
+│   └── run_analysis.py               # Step 4: Complete pipeline runner
 │
 ├── 📊 OUTPUT FILES
 │   ├── behavior_results.json         # Analysis results (JSON)
@@ -538,19 +569,33 @@ Python Code/
 
 ```
 1. csv_to_json_converter.py
-   ↓ Converts CSV to JSON
+   ↓ Converts CSV to JSON format
    
-2. main.py
-   ↓ Loads data and orchestrates
+2. enhanced_classifier.py (imported by main.py)
+   ↓ EnhancedFeatureExtractor: Extracts 23 features
+   ↓ EnhancedBehaviorClassifier: XGBoost prediction
    
-3. enhanced_classifier.py  
-   ↓ Extracts features & predicts
+3. main.py (NetworkBehaviorParser)
+   ↓ Orchestrates: loads data, calls enhanced classifier
+   ↓ Generates anonymized results
    
 4. Results saved
-   ↓
+   ↓ behavior_results.json
    
 5. Reports generated
+   ↓ analysis_report.txt, ANALYSIS_SUMMARY.md
 ```
+
+### 🎯 Key Point: Single Classifier Architecture
+
+**There is NO fallback classifier anymore!** 
+
+The system **always uses** the Enhanced XGBoost Classifier with:
+- ✅ 23 advanced features (vs old 10 basic features)
+- ✅ Domain Intelligence integration
+- ✅ Context-aware tracking attribution
+- ✅ XGBoost algorithm (replaced Random Forest)
+- ✅ Automatic feature augmentation for backward compatibility
 
 ---
 
@@ -969,14 +1014,39 @@ Main analysis engine - coordinates everything and makes final predictions.
 ### Key Components Overview
 
 ```python
-main.py contains:
-1. DomainCategorizer     → Categorizes websites
-2. FeatureExtractor      → Extracts ML features
-3. BehaviorClassifier    → ML prediction (basic)
-4. NetworkBehaviorParser → Orchestrates everything
+main.py now contains ONLY:
+1. NetworkBehaviorParser → Main orchestrator class
 
-Note: Uses enhanced_classifier.py if available (preferred)
+It imports and uses from enhanced_classifier.py:
+1. EnhancedFeatureExtractor     → 23 advanced features + domain intelligence
+2. EnhancedBehaviorClassifier   → XGBoost ML prediction
+
+Note: All basic classifier classes (DomainCategorizer, FeatureExtractor, 
+BehaviorClassifier) have been REMOVED. We exclusively use the enhanced 
+XGBoost classifier for consistency and better performance.
 ```
+
+### 🔄 Architecture Change (October 2025)
+
+**Old Architecture (DEPRECATED):**
+```
+main.py: Basic classes (10 features, Random Forest)
+         ↓ Falls back to basic if enhanced not available
+enhanced_classifier.py: Advanced classes (20 features, Random Forest)
+```
+
+**New Architecture (CURRENT):**
+```
+enhanced_classifier.py: 23 features + XGBoost (ONLY classifier)
+         ↑
+main.py: Imports enhanced classifier (NO fallback)
+```
+
+**Why this change?**
+1. ✅ Random Forest → XGBoost (better generalization, less overfitting)
+2. ✅ Removed redundancy (one classifier, not two)
+3. ✅ Consistency for research paper (XGBoost is our core algorithm)
+4. ✅ Simpler codebase (easier to maintain)
 
 ---
 
@@ -1102,56 +1172,85 @@ logger = logging.getLogger(__name__)
 ---
 
 ```python
-try:
-    from enhanced_classifier import EnhancedFeatureExtractor, EnhancedBehaviorClassifier
-    ENHANCED_AVAILABLE = True
-    logger.info("Enhanced classifier available")
-except ImportError:
-    ENHANCED_AVAILABLE = False
-    logger.warning("Enhanced classifier not available, using basic version")
+# Import enhanced classes (REQUIRED - no fallback)
+from enhanced_classifier import EnhancedFeatureExtractor, EnhancedBehaviorClassifier
 ```
-**What it does:** Try to import enhanced classifier
+**What it does:** Imports the enhanced classifier (REQUIRED)
+
+**Important Change:** 
+- ❌ No more `try-except` block
+- ❌ No more `ENHANCED_AVAILABLE` flag
+- ❌ No more fallback to basic classifier
 
 **Logic:**
 ```python
-IF enhanced_classifier.py exists and imports successfully:
-    ENHANCED_AVAILABLE = True
-    Use advanced features! ✓
-ELSE:
-    ENHANCED_AVAILABLE = False
-    Use basic fallback ✓ (still works!)
+# Always import enhanced classifier
+# If import fails → Program stops with clear error
+# This is intentional - we REQUIRE the enhanced classifier
 ```
 
 **Why this design?**
-- Graceful degradation
-- System always works
-- Better features when available
+- ✅ **Consistency:** Always uses same algorithm (XGBoost)
+- ✅ **Clarity:** No confusion about which classifier is running
+- ✅ **Research focus:** Our paper is about XGBoost, not Random Forest
+- ✅ **Performance:** Enhanced classifier has 23 features vs basic 10 features
+- ✅ **Simplicity:** One code path, easier to debug and maintain
 
 ---
 
-### DomainCategorizer Class
+### ⚠️ IMPORTANT: Classes Removed from main.py
+
+**The following classes are NO LONGER in main.py:**
 
 ```python
-class DomainCategorizer:
-    """Domain categorization with external domain database"""
+❌ class DomainCategorizer  → REMOVED (now in enhanced_classifier.py)
+❌ class FeatureExtractor   → REMOVED (replaced by EnhancedFeatureExtractor)
+❌ class BehaviorClassifier → REMOVED (replaced by EnhancedBehaviorClassifier)
+```
+
+**Why were they removed?**
+1. ❌ Used **Random Forest** (had overfitting with our limited data)
+2. ❌ Only **10 basic features** (vs enhanced 23 features)
+3. ❌ No **Domain Intelligence** integration
+4. ❌ Created **code duplication** and maintenance burden
+5. ❌ Inconsistent with research paper focus (XGBoost)
+
+**Where did the functionality go?**
+```
+Old Basic Classes          →  New Enhanced Classes
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DomainCategorizer          →  Built into EnhancedFeatureExtractor
+FeatureExtractor (10)      →  EnhancedFeatureExtractor (23 features)
+BehaviorClassifier (RF)    →  EnhancedBehaviorClassifier (XGBoost)
+```
+
+**If you see tutorials mentioning these classes, they are OUTDATED!**
+
+---
+
+### NetworkBehaviorParser Class (THE ONLY class in main.py)
+
+```python
+class NetworkBehaviorParser:
+    """Main class for network behavior analysis with enhanced XGBoost classifier"""
     
-    def __init__(self, domain_categories_file: str = 'domain_categories.json'):
-        self.domain_categories = {}
-        self.domain_categories_file = domain_categories_file
-        self.load_domain_categories()
+    def __init__(self, network_logs_file: str = 'networkLogs.json',
+                 domain_categories_file: str = 'domain_categories.json',
+                 training_data_file: str = 'training_data.json'):
+        
+        # Always use enhanced classifier with XGBoost
+        self.feature_extractor = EnhancedFeatureExtractor(domain_categories_file)
+        self.classifier = EnhancedBehaviorClassifier(training_data_file)
+        logger.info("Using Enhanced XGBoost Classifier with Domain Intelligence")
 ```
 
-**What it does:** Initializes the categorizer
+**What it does:** Main orchestrator that coordinates the entire analysis pipeline
 
-**`__init__`:** Special method called when creating object
-```python
-categorizer = DomainCategorizer()  # Calls __init__
-```
-
-**What happens:**
-1. Create empty dictionary for categories
-2. Store filename
-3. Load categories from file
+**Key changes from old version:**
+- ❌ Removed: `if ENHANCED_AVAILABLE` conditional logic
+- ❌ Removed: Fallback to basic classifier
+- ✅ Now: Always uses enhanced classifier
+- ✅ Simpler: One code path, no branching
 
 ---
 

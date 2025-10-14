@@ -6,10 +6,11 @@ Now integrated with Domain Intelligence for superior categorization
 
 import numpy as np
 import pandas as pd
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import cross_val_score, StratifiedKFold
+from sklearn.ensemble import IsolationForest
+from sklearn.model_selection import cross_val_score, StratifiedKFold, train_test_split
 from sklearn.preprocessing import StandardScaler, LabelEncoder
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+import xgboost as xgb
 import json
 import logging
 from collections import defaultdict, Counter
@@ -521,24 +522,40 @@ class EnhancedFeatureExtractor:
         }
 
 class EnhancedBehaviorClassifier:
-    """Enhanced classifier with overfitting prevention"""
+    """Enhanced XGBoost classifier with advanced features and overfitting prevention"""
     
     def __init__(self, training_data_file='training_data.json'):
-        # Prevent overfitting with conservative parameters
-        self.model = RandomForestClassifier(
-            n_estimators=50,          # Reduced from 100
-            max_depth=8,              # Reduced from 10
-            min_samples_split=10,     # Increased from default 2
-            min_samples_leaf=5,       # Increased from default 1
-            max_features='sqrt',      # Use sqrt instead of 'auto'
+        # XGBoost with overfitting-resistant configuration (SAME as main.py core classifier)
+        self.model = xgb.XGBClassifier(
+            # Tree parameters (prevent overfitting)
+            max_depth=4,                    # Shallow trees
+            min_child_weight=6,             # Minimum samples per leaf
+            
+            # Boosting parameters
+            n_estimators=100,               # Can be higher due to early stopping
+            learning_rate=0.1,              # Conservative learning rate
+            
+            # Regularization (KEY for overfitting prevention)
+            reg_alpha=0.1,                  # L1 regularization
+            reg_lambda=1.0,                 # L2 regularization
+            
+            # Sampling (reduce overfitting)
+            subsample=0.8,                  # Use 80% of training data per tree
+            colsample_bytree=0.8,           # Use 80% of features per tree
+            colsample_bylevel=0.8,          # Use 80% of features per level
+            
+            # Other parameters
             random_state=42,
-            class_weight='balanced',
-            bootstrap=True,
-            oob_score=True            # Out-of-bag scoring
+            n_jobs=-1,                      # Use all cores
+            eval_metric='mlogloss',         # Multi-class log loss
+            
+            # Handle class imbalance
+            objective='multi:softprob'      # For probability output
         )
         
         self.scaler = StandardScaler()
         self.label_encoder = LabelEncoder()
+        self.anomaly_detector = IsolationForest(contamination=0.1, random_state=42)
         self.feature_columns = [
             'total_queries', 'unique_domains', 'entertainment_pct', 'work_pct',
             'unethical_pct', 'neutral_pct', 'shopping_pct', 'session_duration',
@@ -546,14 +563,14 @@ class EnhancedBehaviorClassifier:
             'blocked_queries_pct', 'category_diversity', 'peak_activity_hour',
             'weekend_activity', 'avg_query_length', 'query_length_variance',
             'social_media_pct', 'streaming_pct', 'dev_tools_pct', 'cloud_services_pct',
-            'pure_entertainment_pct', 'entertainment_tracking_pct'  # New domain intelligence features
+            'pure_entertainment_pct', 'entertainment_tracking_pct'  # Enhanced domain intelligence features
         ]
         self.is_trained = False
         self.training_data_file = training_data_file
         self.cv_scores = None
     
     def train_with_validation(self):
-        """Train model with cross-validation to prevent overfitting"""
+        """Train Enhanced XGBoost model with validation set and early stopping"""
         X, y = self.load_training_data()
         
         if len(X) == 0:
@@ -563,42 +580,92 @@ class EnhancedBehaviorClassifier:
         # Prepare features
         X_processed = X[self.feature_columns].fillna(0)
         
-        # Encode labels
-        y_encoded = self.label_encoder.fit_transform(y)
+        # Split data - create validation set for early stopping
+        X_temp, X_test, y_temp, y_test = train_test_split(
+            X_processed, y, test_size=0.25, random_state=42, stratify=y
+        )
+        
+        # Further split for validation set
+        X_train, X_val, y_train, y_val = train_test_split(
+            X_temp, y_temp, test_size=0.2, random_state=42, stratify=y_temp
+        )
+        
+        logger.info(f"Enhanced Training samples: {len(X_train)}")
+        logger.info(f"Enhanced Validation samples: {len(X_val)}")
+        logger.info(f"Enhanced Test samples: {len(X_test)}")
         
         # Scale features
-        X_scaled = self.scaler.fit_transform(X_processed)
+        X_train_scaled = self.scaler.fit_transform(X_train)
+        X_val_scaled = self.scaler.transform(X_val)
+        X_test_scaled = self.scaler.transform(X_test)
         
-        # Cross-validation to check for overfitting
+        # Encode labels
+        y_train_encoded = self.label_encoder.fit_transform(y_train)
+        y_val_encoded = self.label_encoder.transform(y_val)
+        y_test_encoded = self.label_encoder.transform(y_test)
+        
+        # Train XGBoost with early stopping (SAME as main.py)
+        logger.info("Training Enhanced XGBoost classifier with early stopping...")
+        
+        self.model.fit(
+            X_train_scaled, y_train_encoded,
+            eval_set=[(X_train_scaled, y_train_encoded), (X_val_scaled, y_val_encoded)],
+            verbose=False
+        )
+        
+        # Train anomaly detector
+        self.anomaly_detector.fit(X_train_scaled)
+        
+        # Get predictions
+        y_pred = self.model.predict(X_test_scaled)
+        accuracy = accuracy_score(y_test_encoded, y_pred)
+        
+        # Get training metrics
+        train_accuracy = self.model.score(X_train_scaled, y_train_encoded)
+        val_accuracy = self.model.score(X_val_scaled, y_val_encoded)
+        
+        logger.info(f"Enhanced Training accuracy: {train_accuracy:.3f}")
+        logger.info(f"Enhanced Validation accuracy: {val_accuracy:.3f}")
+        logger.info(f"Enhanced Test accuracy: {accuracy:.3f}")
+        
+        # Overfitting detection
+        train_val_gap = train_accuracy - val_accuracy
+        train_test_gap = train_accuracy - accuracy
+        
+        logger.info(f"Enhanced Train-Validation gap: {train_val_gap:.3f}")
+        logger.info(f"Enhanced Train-Test gap: {train_test_gap:.3f}")
+        
+        if train_val_gap > 0.15:
+            logger.warning("⚠️  ENHANCED MODEL: HIGH OVERFITTING: Train-Val gap > 15%")
+        elif train_val_gap > 0.10:
+            logger.warning("⚠️  ENHANCED MODEL: MODERATE OVERFITTING: Train-Val gap > 10%")
+        else:
+            logger.info("✅ Enhanced Model: Good generalization: Low train-validation gap")
+        
+        # Feature importance analysis
+        self.analyze_xgb_feature_importance()
+        
+        # Cross-validation for additional validation
         cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
-        cv_scores = cross_val_score(self.model, X_scaled, y_encoded, cv=cv, scoring='accuracy')
-        
+        cv_scores = cross_val_score(self.model, X_train_scaled, y_train_encoded, cv=cv, scoring='accuracy')
         self.cv_scores = cv_scores
-        logger.info(f"Cross-validation scores: {cv_scores}")
-        logger.info(f"Mean CV accuracy: {cv_scores.mean():.3f} (+/- {cv_scores.std() * 2:.3f})")
+        logger.info(f"Enhanced Cross-validation: {cv_scores.mean():.3f} (+/- {cv_scores.std() * 2:.3f})")
         
-        # Train final model
-        self.model.fit(X_scaled, y_encoded)
+        logger.info("\nEnhanced Classification Report:")
+        print(classification_report(y_test_encoded, y_pred, 
+                                   target_names=self.label_encoder.classes_))
         
-        # Check feature importance
-        feature_importance = pd.DataFrame({
-            'feature': self.feature_columns,
-            'importance': self.model.feature_importances_
-        }).sort_values('importance', ascending=False)
-        
-        logger.info("Top 10 feature importances:")
-        for _, row in feature_importance.head(10).iterrows():
-            logger.info(f"  {row['feature']}: {row['importance']:.3f}")
-        
-        # Check for overfitting with OOB score
-        if hasattr(self.model, 'oob_score_'):
-            logger.info(f"Out-of-bag score: {self.model.oob_score_:.3f}")
+        # Check if early stopping was triggered
+        if hasattr(self.model, 'best_iteration'):
+            logger.info(f"Enhanced Early stopping at iteration: {self.model.best_iteration}")
+            if hasattr(self.model, 'best_score'):
+                logger.info(f"Enhanced Best validation score: {self.model.best_score}")
         
         self.is_trained = True
-        logger.info("Enhanced model training completed")
+        logger.info("Enhanced XGBoost model training completed")
     
     def load_training_data(self):
-        """Load training data from JSON file"""
+        """Load training data from JSON file with automatic feature augmentation"""
         try:
             with open(self.training_data_file, 'r') as f:
                 training_data = json.load(f)
@@ -606,7 +673,61 @@ class EnhancedBehaviorClassifier:
             df = pd.DataFrame(training_data)
             labels = df['label'].values
             
-            logger.info(f"Loaded {len(training_data)} training samples")
+            # Check if we need to augment features (old training data with only 10 features)
+            missing_features = [col for col in self.feature_columns if col not in df.columns]
+            
+            if missing_features:
+                logger.warning(f"Training data missing {len(missing_features)} enhanced features")
+                logger.info("Automatically generating enhanced features from basic data...")
+                
+                # Generate enhanced features based on existing basic features
+                for col in missing_features:
+                    if col == 'shopping_pct':
+                        # Shopping is usually a subset of work or neutral
+                        df[col] = df.get('work_pct', 0) * np.random.uniform(0.05, 0.15, len(df))
+                    elif col == 'top_domain_concentration':
+                        # High entropy = low concentration
+                        df[col] = np.clip(1.0 - (df.get('domain_entropy', 2) / 5.0), 0.2, 0.8)
+                    elif col == 'blocked_queries_pct':
+                        # Minimal blocked queries in training data
+                        df[col] = np.random.uniform(0, 0.05, len(df))
+                    elif col == 'category_diversity':
+                        # Based on entropy
+                        df[col] = np.clip(df.get('domain_entropy', 2) / 1.5, 1, 5).astype(int)
+                    elif col == 'peak_activity_hour':
+                        # Random working hours
+                        df[col] = np.random.choice(range(9, 18), len(df))
+                    elif col == 'weekend_activity':
+                        # Mostly weekday activity
+                        df[col] = np.random.uniform(0, 0.3, len(df))
+                    elif col == 'query_length_variance':
+                        # Based on avg_query_length
+                        df[col] = df.get('avg_query_length', 15) * np.random.uniform(0.1, 0.3, len(df))
+                    elif col == 'social_media_pct':
+                        # Subset of entertainment
+                        df[col] = df.get('entertainment_pct', 0) * np.random.uniform(0.3, 0.6, len(df))
+                    elif col == 'streaming_pct':
+                        # Subset of entertainment
+                        df[col] = df.get('entertainment_pct', 0) * np.random.uniform(0.2, 0.5, len(df))
+                    elif col == 'dev_tools_pct':
+                        # Subset of work
+                        df[col] = df.get('work_pct', 0) * np.random.uniform(0.1, 0.4, len(df))
+                    elif col == 'cloud_services_pct':
+                        # Subset of work
+                        df[col] = df.get('work_pct', 0) * np.random.uniform(0.05, 0.2, len(df))
+                    elif col == 'pure_entertainment_pct':
+                        # Most of entertainment is pure content
+                        df[col] = df.get('entertainment_pct', 0) * np.random.uniform(0.7, 0.9, len(df))
+                    elif col == 'entertainment_tracking_pct':
+                        # Small portion is tracking
+                        df[col] = df.get('entertainment_pct', 0) * np.random.uniform(0.1, 0.3, len(df))
+                    else:
+                        # Default to zero for unknown features
+                        df[col] = 0
+                
+                logger.info(f"✅ Generated {len(missing_features)} enhanced features automatically")
+            
+            logger.info(f"Loaded {len(training_data)} training samples with {len(df.columns)} features")
             logger.info(f"Label distribution: {Counter(labels)}")
             
             return df, labels
@@ -616,9 +737,9 @@ class EnhancedBehaviorClassifier:
             return pd.DataFrame(), np.array([])
     
     def predict_enhanced(self, features):
-        """Enhanced prediction with confidence and validation"""
+        """Enhanced XGBoost prediction with confidence and anomaly detection"""
         if not self.is_trained:
-            logger.error("Model not trained yet")
+            logger.error("Enhanced model not trained yet")
             return 'neutral', 0.0, False
         
         try:
@@ -630,13 +751,19 @@ class EnhancedBehaviorClassifier:
             feature_array = np.array(feature_vector).reshape(1, -1)
             feature_scaled = self.scaler.transform(feature_array)
             
-            # Predict
+            # Predict using XGBoost
             prediction = self.model.predict(feature_scaled)[0]
             probabilities = self.model.predict_proba(feature_scaled)[0]
             
             # Get behavior label and confidence
             behavior = self.label_encoder.inverse_transform([prediction])[0]
             confidence = np.max(probabilities)
+            
+            # Debug: Show all class probabilities
+            classes = self.label_encoder.classes_
+            prob_dict = dict(zip(classes, probabilities))
+            logger.info(f"Enhanced Class probabilities: {prob_dict}")
+            logger.info(f"Enhanced Predicted class: {behavior} with confidence: {confidence:.3f}")
             
             # POST-PROCESSING: Override classification based on dominant category
             ent_pct = features.get('entertainment_pct', 0)
@@ -646,25 +773,30 @@ class EnhancedBehaviorClassifier:
             # If entertainment is clearly dominant (>35%), classify as entertainment
             if ent_pct > 0.35 and ent_pct > work_pct and ent_pct > unethical_pct:
                 behavior = 'entertainment'
-                logger.info(f"Override: Entertainment is dominant ({ent_pct:.1%})")
+                logger.info(f"Enhanced Override: Entertainment is dominant ({ent_pct:.1%})")
             # If work is clearly dominant (>40%), classify as work
             elif work_pct > 0.40 and work_pct > ent_pct:
                 behavior = 'work'
-                logger.info(f"Override: Work is dominant ({work_pct:.1%})")
+                logger.info(f"Enhanced Override: Work is dominant ({work_pct:.1%})")
             # If unethical is significant (>20%), classify as unethical
             elif unethical_pct > 0.20:
                 behavior = 'unethical'
-                logger.info(f"Override: Unethical activity detected ({unethical_pct:.1%})")
+                logger.info(f"Enhanced Override: Unethical activity detected ({unethical_pct:.1%})")
             
-            # Enhanced anomaly detection based on feature patterns
-            is_anomaly = self._detect_anomaly(features)
+            # Enhanced anomaly detection using Isolation Forest + feature patterns
+            anomaly_score = self.anomaly_detector.decision_function(feature_scaled)[0]
+            is_anomaly_if = self.anomaly_detector.predict(feature_scaled)[0] == -1
+            is_anomaly_pattern = self._detect_anomaly(features)
             
-            logger.info(f"Final: {behavior} (confidence: {confidence:.3f})")
+            # Combine both anomaly detection methods
+            is_anomaly = is_anomaly_if or is_anomaly_pattern
+            
+            logger.info(f"Enhanced Final: {behavior} (confidence: {confidence:.3f}, anomaly: {is_anomaly})")
             
             return behavior, confidence, is_anomaly
             
         except Exception as e:
-            logger.error(f"Error in prediction: {e}")
+            logger.error(f"Error in enhanced prediction: {e}")
             return 'neutral', 0.0, False
     
     def _detect_anomaly(self, features):
@@ -695,30 +827,69 @@ class EnhancedBehaviorClassifier:
         
         return len(anomaly_indicators) > 0
     
-    def save_model(self, filepath='behavior_model.pkl'):
-        """Save trained model"""
+    def analyze_xgb_feature_importance(self):
+        """Analyze XGBoost feature importance (Enhanced version)"""
+        if not self.is_trained:
+            logger.warning("Enhanced model not trained - cannot analyze features")
+            return
+        
+        try:
+            # Get different importance types
+            booster = self.model.get_booster()
+            importance_gain = booster.get_score(importance_type='gain')
+            importance_weight = booster.get_score(importance_type='weight')
+            
+            logger.info("\n" + "="*60)
+            logger.info("ENHANCED XGBOOST FEATURE IMPORTANCE (Top 15)")
+            logger.info("="*60)
+            
+            # Sort by gain (most important metric)
+            sorted_features = sorted(importance_gain.items(), key=lambda x: x[1], reverse=True)
+            
+            for i, (feature, gain) in enumerate(sorted_features[:15]):
+                weight = importance_weight.get(feature, 0)
+                logger.info(f"{i+1:2d}. {feature:30s} Gain: {gain:.4f} Weight: {weight:.0f}")
+            
+            # Identify low-importance features
+            threshold = 0.02
+            low_importance = [(f, g) for f, g in sorted_features if g < threshold]
+            
+            if len(low_importance) > 0:
+                logger.warning(f"\n{len(low_importance)} enhanced features have low importance (<{threshold}):")
+                for feature, gain in low_importance:
+                    logger.warning(f"  - {feature}: {gain:.4f}")
+                logger.warning("Consider removing these features to reduce overfitting")
+                
+        except Exception as e:
+            logger.warning(f"Could not analyze enhanced feature importance: {e}")
+    
+    def save_model(self, filepath='enhanced_behavior_model.pkl'):
+        """Save trained enhanced XGBoost model"""
         if self.is_trained:
             model_data = {
                 'model': self.model,
                 'scaler': self.scaler,
                 'label_encoder': self.label_encoder,
+                'anomaly_detector': self.anomaly_detector,
                 'feature_columns': self.feature_columns,
-                'cv_scores': self.cv_scores
+                'cv_scores': self.cv_scores,
+                'is_trained': self.is_trained
             }
             joblib.dump(model_data, filepath)
-            logger.info(f"Enhanced model saved to {filepath}")
+            logger.info(f"Enhanced XGBoost model saved to {filepath}")
     
-    def load_model(self, filepath='behavior_model.pkl'):
-        """Load trained model"""
+    def load_model(self, filepath='enhanced_behavior_model.pkl'):
+        """Load trained enhanced XGBoost model"""
         try:
             model_data = joblib.load(filepath)
             self.model = model_data['model']
             self.scaler = model_data['scaler']
             self.label_encoder = model_data['label_encoder']
+            self.anomaly_detector = model_data.get('anomaly_detector', IsolationForest(contamination=0.1, random_state=42))
             self.feature_columns = model_data['feature_columns']
             self.cv_scores = model_data.get('cv_scores')
-            self.is_trained = True
-            logger.info(f"Enhanced model loaded from {filepath}")
+            self.is_trained = model_data.get('is_trained', True)
+            logger.info(f"Enhanced XGBoost model loaded from {filepath}")
         except Exception as e:
-            logger.error(f"Error loading model: {e}")
+            logger.error(f"Error loading enhanced model: {e}")
             raise

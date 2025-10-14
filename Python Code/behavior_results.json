@@ -1,10 +1,10 @@
 [
   {
-    "timestamp": "2025-10-14T13:39:51.848803",
+    "timestamp": "2025-10-14T23:13:49.448763",
     "user_id": "64bec055",
     "behavior": "entertainment",
-    "confidence": "0.3479076",
-    "is_anomaly": true,
+    "confidence": "0.42549708",
+    "is_anomaly": "True",
     "features": {
       "total_queries": 21792,
       "unique_domains": 834,
@@ -43,6 +43,6 @@
         "play.googleapis.com": 1215
       }
     },
-    "summary": "User behavior classified as 'entertainment' with 34.8% confidence - Top domains: graph.facebook.com, vulcan.branch.io, firebase-settings.crashlytics.com"
+    "summary": "User behavior classified as 'entertainment' with 42.5% confidence - Top domains: graph.facebook.com, vulcan.branch.io, firebase-settings.crashlytics.com"
   }
 ]

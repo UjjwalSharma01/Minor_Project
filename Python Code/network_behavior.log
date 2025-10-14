@@ -119,3 +119,54 @@ Classification Report:
 2025-10-14 13:39:51,848 - INFO - Override: Entertainment is dominant (42.3%)
 2025-10-14 13:39:51,848 - INFO - Final: entertainment (confidence: 0.348)
 2025-10-14 13:39:51,849 - INFO - Results saved to behavior_results.json
+2025-10-14 23:11:59,959 - INFO - Loaded 746 domain categories
+2025-10-14 23:11:59,960 - INFO - Domain Intelligence System integrated successfully
+2025-10-14 23:11:59,960 - INFO - Using Enhanced XGBoost Classifier with Domain Intelligence
+2025-10-14 23:11:59,960 - ERROR - Error loading enhanced model: [Errno 2] No such file or directory: 'enhanced_behavior_model.pkl'
+2025-10-14 23:11:59,960 - INFO - Training new enhanced XGBoost model...
+2025-10-14 23:12:00,058 - INFO - Loaded 1900 training samples
+2025-10-14 23:12:00,059 - INFO - Label distribution: Counter({'work': 450, 'entertainment': 400, 'mixed': 400, 'neutral': 350, 'unethical': 300})
+2025-10-14 23:12:00,060 - ERROR - Error during behavior analysis: "['shopping_pct', 'top_domain_concentration', 'blocked_queries_pct', 'category_diversity', 'peak_activity_hour', 'weekend_activity', 'query_length_variance', 'social_media_pct', 'streaming_pct', 'dev_tools_pct', 'cloud_services_pct', 'pure_entertainment_pct', 'entertainment_tracking_pct'] not in index"
+2025-10-14 23:12:48,480 - INFO - Loaded 746 domain categories
+2025-10-14 23:12:48,480 - INFO - Domain Intelligence System integrated successfully
+2025-10-14 23:12:48,480 - INFO - Using Enhanced XGBoost Classifier with Domain Intelligence
+2025-10-14 23:12:48,480 - ERROR - Error loading enhanced model: [Errno 2] No such file or directory: 'enhanced_behavior_model.pkl'
+2025-10-14 23:12:48,480 - INFO - Training new enhanced XGBoost model...
+2025-10-14 23:12:48,500 - WARNING - Training data missing 13 enhanced features
+2025-10-14 23:12:48,501 - INFO - Automatically generating enhanced features from basic data...
+2025-10-14 23:12:48,511 - INFO - ✅ Generated 13 enhanced features automatically
+2025-10-14 23:12:48,512 - INFO - Loaded 1900 training samples with 24 features
+2025-10-14 23:12:48,512 - INFO - Label distribution: Counter({'work': 450, 'entertainment': 400, 'mixed': 400, 'neutral': 350, 'unethical': 300})
+2025-10-14 23:12:48,523 - INFO - Enhanced Training samples: 1140
+2025-10-14 23:12:48,523 - INFO - Enhanced Validation samples: 285
+2025-10-14 23:12:48,524 - INFO - Enhanced Test samples: 475
+2025-10-14 23:12:48,530 - INFO - Training Enhanced XGBoost classifier with early stopping...
+2025-10-14 23:12:49,401 - INFO - Enhanced Training accuracy: 0.999
+2025-10-14 23:12:49,401 - INFO - Enhanced Validation accuracy: 0.982
+2025-10-14 23:12:49,401 - INFO - Enhanced Test accuracy: 0.981
+2025-10-14 23:12:49,401 - INFO - Enhanced Train-Validation gap: 0.017
+2025-10-14 23:12:49,402 - INFO - Enhanced Train-Test gap: 0.018
+2025-10-14 23:12:49,402 - INFO - ✅ Enhanced Model: Good generalization: Low train-validation gap
+2025-10-14 23:12:49,402 - WARNING - Enhanced model not trained - cannot analyze features
+2025-10-14 23:12:51,107 - INFO - Enhanced Cross-validation: 0.978 (+/- 0.015)
+2025-10-14 23:12:51,107 - INFO - 
+Enhanced Classification Report:
+2025-10-14 23:12:51,114 - INFO - Enhanced XGBoost model training completed
+2025-10-14 23:12:51,170 - INFO - Enhanced XGBoost model saved to enhanced_behavior_model.pkl
+2025-10-14 23:12:51,234 - INFO - Loaded 36240 network logs from networkLogs.json
+2025-10-14 23:12:51,799 - INFO - Enhanced Class probabilities: {'entertainment': np.float32(0.09882544), 'mixed': np.float32(0.42549708), 'neutral': np.float32(0.27133244), 'unethical': np.float32(0.10766804), 'work': np.float32(0.09667699)}
+2025-10-14 23:12:51,799 - INFO - Enhanced Predicted class: mixed with confidence: 0.425
+2025-10-14 23:12:51,799 - INFO - Enhanced Override: Entertainment is dominant (42.3%)
+2025-10-14 23:12:51,813 - INFO - Enhanced Final: entertainment (confidence: 0.425, anomaly: True)
+2025-10-14 23:12:51,813 - INFO - Results saved to behavior_results.json
+2025-10-14 23:13:48,746 - INFO - Loaded 746 domain categories
+2025-10-14 23:13:48,746 - INFO - Domain Intelligence System integrated successfully
+2025-10-14 23:13:48,747 - INFO - Using Enhanced XGBoost Classifier with Domain Intelligence
+2025-10-14 23:13:48,781 - INFO - Enhanced XGBoost model loaded from enhanced_behavior_model.pkl
+2025-10-14 23:13:48,781 - INFO - Loaded existing enhanced model
+2025-10-14 23:13:48,847 - INFO - Loaded 36240 network logs from networkLogs.json
+2025-10-14 23:13:49,435 - INFO - Enhanced Class probabilities: {'entertainment': np.float32(0.09882544), 'mixed': np.float32(0.42549708), 'neutral': np.float32(0.27133244), 'unethical': np.float32(0.10766804), 'work': np.float32(0.09667699)}
+2025-10-14 23:13:49,435 - INFO - Enhanced Predicted class: mixed with confidence: 0.425
+2025-10-14 23:13:49,435 - INFO - Enhanced Override: Entertainment is dominant (42.3%)
+2025-10-14 23:13:49,448 - INFO - Enhanced Final: entertainment (confidence: 0.425, anomaly: True)
+2025-10-14 23:13:49,449 - INFO - Results saved to behavior_results.json
