@@ -167,9 +167,9 @@ export default function HomePage() {
               className="flex flex-wrap justify-center gap-6 mt-12"
             >
               {[
-                { label: '99.9%', sublabel: 'Accuracy' },
+                { label: '97.7%', sublabel: 'Accuracy' },
                 { label: '24/7', sublabel: 'Monitoring' },
-                { label: '<1s', sublabel: 'Response Time' }
+                { label: '<3s', sublabel: 'Response Time' }
               ].map((stat, i) => (
                 <FloatingElement key={i} delay={i * 0.2}>
                   <div className="glass px-6 py-3 rounded-xl">
