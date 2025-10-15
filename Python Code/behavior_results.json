@@ -1,0 +1,48 @@
+[
+  {
+    "timestamp": "2025-10-15T01:40:52.398248",
+    "user_id": "64bec055",
+    "behavior": "entertainment",
+    "confidence": "0.42549708",
+    "is_anomaly": "True",
+    "features": {
+      "total_queries": 21792,
+      "unique_domains": 834,
+      "entertainment_pct": 0.42290748898678415,
+      "work_pct": 0.13027716593245228,
+      "unethical_pct": 0.0,
+      "neutral_pct": 0.3799100587371512,
+      "shopping_pct": 0.06690528634361234,
+      "pure_entertainment_pct": 0.3962922173274596,
+      "entertainment_tracking_pct": 0.02661527165932452,
+      "session_duration": 10079.396983333334,
+      "queries_per_minute": 2.1620341014481226,
+      "domain_entropy": 7.177628789704141,
+      "top_domain_concentration": 0.07475220264317181,
+      "blocked_queries_pct": 0.6024687958883994,
+      "category_diversity": 4,
+      "peak_activity_hour": 0,
+      "weekend_activity": 0.3123896247240618,
+      "avg_query_length": 25.404442604856513,
+      "query_length_variance": 133.0276237511208,
+      "social_media_pct": 0.1551048565121413,
+      "streaming_pct": 0.018763796909492272,
+      "dev_tools_pct": 0.0,
+      "cloud_services_pct": 0.011065121412803532,
+      "category_counts": {
+        "neutral": 26426,
+        "entertainment": 7284,
+        "work": 821,
+        "shopping": 1709
+      },
+      "top_domains": {
+        "graph.facebook.com": 1629,
+        "vulcan.branch.io": 1242,
+        "firebase-settings.crashlytics.com": 1223,
+        "gateway.instagram.com": 1223,
+        "play.googleapis.com": 1215
+      }
+    },
+    "summary": "User behavior classified as 'entertainment' with 42.5% confidence - Top domains: graph.facebook.com, vulcan.branch.io, firebase-settings.crashlytics.com"
+  }
+]

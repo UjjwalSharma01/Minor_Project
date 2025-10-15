@@ -500,3 +500,427 @@ News, general browsing
 Mixed behavior:
 
 No dominant category"
+
+
+
+1. Program starts
+   ↓
+2. Import all libraries and tools
+   ↓
+3. Set up logging
+   ↓
+4. main() function runs
+   ↓
+5. Create NetworkBehaviorParser object
+   - Loads domain_categories.json (750 domains)
+   - Prepares training_data.json reference (1900 samples)
+   ↓
+6. Initialize (train or load model)
+   - Try to load existing model
+   - If not found: Train on 1900 samples
+   - Train anomaly detector
+   ↓
+7. Load real DNS logs from networkLogs.json
+   ↓
+8. Analyze logs:
+   a. Extract features (use 750 domain mappings)
+   b. Classify behavior (use trained XGBoost)
+   c. Check anomalies (use Isolation Forest)
+   ↓
+9. Display all results to screen
+   ↓
+10. Save results to behavior_results.json
+   ↓
+11. Program ends
+
+
+
+
+Alright, let me break down this ENTIRE file like you're explaining it to your teacher. I'll explain EVERY concept from scratch.
+
+COMPLETE EXPLANATION OF main.py
+PART 1: The Header Comments (Lines 1-9)
+What this means:
+
+#!/usr/bin/env python3 - Tells the computer to run this file using Python 3
+The text in """...""" is called a docstring - it's documentation explaining what this program does
+Think of it as the "title page" of your project
+PART 2: Importing Libraries (Lines 11-28)
+Concept: What are Libraries?
+Libraries are pre-written code that others have made. Instead of writing everything from scratch, we use these tools.
+
+Think of it like this: If you're building a house, you don't make your own hammer - you buy one from the store. Libraries are like buying tools instead of making them.
+
+Line by line:
+
+import json - Tool to read/write JSON files (those .json files we discussed)
+import logging - Tool to write logs (like a diary of what the program does)
+import pandas as pd - Tool to work with tables/spreadsheets of data
+import numpy as np - Tool for math calculations (like calculating percentages)
+from datetime import datetime, timedelta - Tool to work with dates and times
+from typing import Dict, List, Tuple, Optional - Helps us specify what type of data we expect (just for documentation)
+import hashlib - Tool to create anonymous user IDs (privacy protection)
+from collections import Counter, defaultdict - Tools to count things easily
+import joblib - Tool to save/load trained models
+warnings.filterwarnings('ignore') - Hide warning messages (keeps output clean)
+ML = Machine Learning libraries:
+
+Concept: What is sklearn (scikit-learn)?
+It's like a toolbox full of machine learning tools that data scientists use worldwide.
+
+IsolationForest - The anomaly detector we discussed (finds weird patterns)
+train_test_split - Splits data into training and testing portions
+cross_val_score - Tests model accuracy multiple times
+StandardScaler - Makes numbers comparable (scales features)
+LabelEncoder - Converts text labels ("entertainment") to numbers (0, 1, 2)
+classification_report, accuracy_score - Tools to measure how good our model is
+xgboost as xgb - The XGBoost library (our main classifier)
+PART 3: Setting Up Logging (Lines 30-40)
+What this does:
+Creates a "logger" that writes messages about what the program is doing.
+
+Where it writes:
+
+To a file called network_behavior.log (permanent record)
+To the screen (so you can see it while running)
+Format: Timestamp - Level - Message
+Example: 2025-10-15 10:30:45 - INFO - Loading model...
+
+Why we need this:
+
+Debugging: When something goes wrong, we can check the log
+Monitoring: See what the program is doing
+Proof: Show that the program executed correctly
+PART 4: Importing Our Custom Code (Lines 42-48)
+What this means:
+We're importing two classes (blueprints) from another file we wrote:
+
+EnhancedFeatureExtractor - Extracts features from DNS logs
+EnhancedBehaviorClassifier - The XGBoost model that classifies behavior
+Concept: What is a Class?
+A class is like a blueprint or template. Like a cookie cutter - it defines the shape, but you can make many cookies from it.
+
+PART 5: The Main Class - NetworkBehaviorParser (Lines 50-60)
+Concept: What is __init__?
+__init__ is a special function that runs when you CREATE an object from a class. Think of it as the "setup" function.
+
+What it does:
+When you create a NetworkBehaviorParser, it needs to know which files to use:
+
+network_logs_file - Where are the DNS logs?
+domain_categories_file - Where is the domain dictionary?
+training_data_file - Where is the training data?
+Default values: If you don't specify, it uses these file names.
+
+What this does:
+
+Line 1-2: Creates two objects:
+
+self.feature_extractor - Object that extracts features (uses the 750 domain categories)
+self.classifier - Object that does classification (uses the 1900 training samples)
+Concept: What is self?
+self refers to "this specific object". Like saying "my feature extractor" vs "someone else's feature extractor".
+
+Line 3: Writes to log: "Using Enhanced XGBoost..."
+
+Line 4: Remembers which file has network logs
+
+Line 5: Creates empty list to store results
+
+PART 6: The Initialize Function (Lines 62-70)
+What this function does:
+Prepares the system to work.
+
+Concept: What is try/except?
+It's like saying "try to do this, but if it fails, do this instead."
+
+The logic:
+
+TRY to load an existing trained model from disk
+If successful: "Great! We already have a trained model"
+EXCEPT (if loading fails - model doesn't exist):
+Train a new model using the 1900 samples
+Save the trained model to disk
+Why this is smart:
+
+First time: Trains model (takes time)
+Later times: Loads saved model (fast!)
+You don't retrain every time you run the program
+PART 7: The Main Analysis Function (Lines 72-93)
+Concept: Function Parameters
+
+self - The object itself
+dns_logs: List[Dict] - A list of DNS log entries (each entry is a dictionary)
+window_minutes: int = 30 - Time window for analysis (default 30 minutes)
+-> Dict - This function returns a dictionary
+STEP 1: Feature Extraction
+
+What happens here:
+
+STEP 2: Classification
+
+What happens:
+
+STEP 3: Privacy Protection
+
+Calls another function to create an anonymous user ID (we'll explain this function later).
+
+STEP 4: Package Results
+
+Creates a dictionary with all the results:
+
+Current timestamp
+Anonymous user ID
+Predicted behavior
+Confidence score
+Anomaly flag
+All the features
+Human-readable summary
+Then:
+
+Adds this result to history (for later)
+Returns the result to whoever called this function
+PART 8: Helper Functions
+Function 1: Anonymize User (Lines 95-103)
+Concept: What is a hash?
+A hash is like a one-way encryption. You can turn "192.168.1.100" into "a3f4b9c2", but you can't reverse it.
+
+What this function does:
+
+Gets the client IP from the first DNS log
+Converts it to a hash (e.g., "192.168.1.100" → "a3f4b9c2")
+Returns first 8 characters of the hash
+Why:
+Privacy! Instead of storing "192.168.1.100", we store "a3f4b9c2" - we can track behavior without knowing WHO it is.
+
+Function 2: Generate Summary (Lines 105-113)
+What this does:
+Creates a nice sentence summarizing the results.
+
+Example output:
+"User behavior classified as 'entertainment' with 87.3% confidence - Top domains: youtube.com, facebook.com, instagram.com"
+
+Line by line:
+
+Get top domains from features
+Take first 3 domains and join with commas
+Create summary sentence
+Add top domains if available
+Return the summary
+Function 3: Load Network Logs (Lines 115-134)
+Concept: What is with open?
+It opens a file safely. The with ensures the file is properly closed after reading.
+
+What this does:
+Opens networkLogs.json and loads it as JSON.
+
+Why this check?
+
+Sometimes the JSON file format varies:
+
+This code handles all three formats!
+
+Log how many entries loaded, then return them.
+
+Error handling:
+
+FileNotFoundError: File doesn't exist → return empty list
+JSONDecodeError: File is not valid JSON → return empty list
+Exception: Any other error → return empty list
+Why return empty list instead of crashing?
+The program can handle an empty list gracefully instead of crashing completely.
+
+Function 4: Save Results (Lines 136-140)
+What this does:
+Saves all the results to a JSON file.
+
+indent=2 - Makes it pretty/readable
+default=str - Converts things that can't be JSON-ified to strings
+Logs confirmation message
+PART 9: The Main Function (Lines 142-208)
+This is the entry point - where the program actually starts running.
+
+STEP 1: Create the Parser Object
+
+Creates a NetworkBehaviorParser object with the three file paths.
+
+Remember: This calls __init__, which:
+
+Loads domain categories (750 domains)
+Prepares the classifier with training data reference (1900 samples)
+STEP 2: Initialize (Train or Load Model)
+
+Calls the initialize() function we explained earlier:
+
+Tries to load existing model
+If not found, trains new model on 1900 samples
+Trains anomaly detector
+STEP 3: Load Real Data
+
+Loads the actual DNS logs from networkLogs.json
+If empty or error, stop the program (return)
+STEP 4: THE MAIN ANALYSIS
+
+This is where the magic happens! Calls analyze_logs():
+
+Extracts features using domain categories
+Classifies behavior using trained XGBoost
+Checks for anomalies
+Returns complete result
+STEP 5: Display Main Results
+
+Prints the key findings:
+
+Anonymous user ID
+Predicted behavior
+Confidence percentage
+Anomaly status
+Summary sentence
+Format note: {result['confidence']:.1%} means "show as percentage with 1 decimal place"
+
+STEP 6: Display Detailed Features
+
+Shows all the calculated features:
+
+How many queries
+How many unique domains
+Percentage breakdowns
+Session duration
+Entropy
+etc.
+STEP 7: Category Breakdown
+
+Shows detailed count for each category:
+
+STEP 8: Show Top Domains
+
+Lists the most visited domains with their categories:
+
+STEP 9: Save and Final Messages
+
+Saves results to behavior_results.json
+Prints completion message
+Shows how many domains were loaded
+Gives user instructions
+Concept: What is if __name__ == "__main__"?
+
+This is Python's way of saying: "Only run this if someone executed THIS file directly."
+
+Why needed:
+
+If you run python main.py → This runs
+If you import this file in another program → This doesn't run
+It prevents accidental execution when importing.
+
+COMPLETE FLOW SUMMARY
+KEY CONCEPTS FOR YOUR PRESENTATION
+Teacher asks: "What does this file do?"
+
+"This is the main execution file. It coordinates three components: the domain categorizer (750 domains), the trained XGBoost model (1900 training samples), and the real network logs. It extracts features from DNS logs, classifies behavior, detects anomalies, and outputs comprehensive results."
+
+Teacher asks: "Walk me through the flow"
+
+"First, we initialize the system which trains or loads the XGBoost model. Then we load real DNS logs. For each domain in the logs, we look it up in our 750-domain dictionary to categorize it. We calculate features like entertainment percentage. These features go to the trained model which predicts behavior based on patterns it learned from 1900 training examples. Finally, we check for anomalies and display results."
+
+Teacher asks: "Why so many functions?"
+
+"We use modular programming - each function has one specific job. This makes the code easier to understand, test, and debug. For example, load_network_logs() only loads data, analyze_logs() only analyzes, and save_results() only saves."
+
+
+
+For Your Presentation:
+Teacher: "What is feature extraction?"
+
+"Feature extraction is the process of converting raw DNS logs into numerical features that machine learning models can understand. We take a list of domains and timestamps and calculate 23 statistical features like entertainment percentage, domain diversity, session duration, and query patterns."
+
+Teacher: "How do you extract features?"
+
+"First, we filter out infrastructure domains. Then, we look up each domain in our 750-domain dictionary to categorize it. We count categories and calculate percentages. We also compute entropy for diversity, temporal features like session duration, and specific indicators like social media usage. The result is a 23-dimensional feature vector that represents user behavior numerically."
+
+Teacher: "Why is this necessary?"
+
+"Machine learning models like XGBoost can only work with numbers, not text. Raw DNS logs are just domain names and timestamps. Feature extraction transforms this raw data into meaningful statistics that capture behavioral patterns, enabling the model to classify behavior based on patterns it learned during training."
+
+You now understand feature extraction completely! 🎯
+
+INPUT: Raw DNS Logs
+[
+  {"domain": "youtube.com", "timestamp": "10:00:00"},
+  {"domain": "youtube.com", "timestamp": "10:01:00"},
+  {"domain": "github.com", "timestamp": "10:02:00"},
+  ...
+]
+
+↓ STEP 1: Filter Infrastructure
+Remove: analytics, CDN, tracking domains
+Keep: user-facing domains
+
+↓ STEP 2: Categorize Domains
+youtube.com → entertainment
+github.com → work
+(using domain_categories.json - 750 domains)
+
+↓ STEP 3: Count Categories
+entertainment: 70
+work: 20
+unethical: 5
+neutral: 5
+
+↓ STEP 4: Calculate Percentages
+entertainment_pct: 70/100 = 0.70
+work_pct: 20/100 = 0.20
+unethical_pct: 5/100 = 0.05
+neutral_pct: 5/100 = 0.05
+
+↓ STEP 5: Count Unique Domains
+unique_domains: 25
+
+↓ STEP 6: Calculate Entropy
+domain_entropy: 2.8
+
+↓ STEP 7: Calculate Time Features
+session_duration: 45.5 minutes
+queries_per_minute: 2.2
+peak_activity_hour: 10
+
+↓ STEP 8: Calculate Specific Features
+social_media_pct: 0.40
+streaming_pct: 0.30
+dev_tools_pct: 0.15
+
+OUTPUT: Feature Vector
+{
+  "total_queries": 100,
+  "unique_domains": 25,
+  "entertainment_pct": 0.70,
+  "work_pct": 0.20,
+  "unethical_pct": 0.05,
+  "neutral_pct": 0.05,
+  "session_duration": 45.5,
+  "queries_per_minute": 2.2,
+  "domain_entropy": 2.8,
+  "peak_activity_hour": 10,
+  "social_media_pct": 0.40,
+  "streaming_pct": 0.30,
+  ... (23 total features)
+}
+
+↓
+This goes to XGBoost for classification!
+
+
+CORRECTED VERBAL EXPLANATION (For Presentation):
+"The flow starts with file setup and importing necessary libraries. Then we create the NetworkBehaviorParser object which loads the 750-domain dictionary and references the 1900-sample training data.
+
+Next, we initialize the system - it tries to load an existing trained model, and if not found, trains XGBoost on the 1900 synthetic samples and saves it.
+
+Note: If we have CSV data, we use a separate converter script BEFORE running main.py to convert it to JSON.
+
+Then we load the real network logs from networkLogs.json. These logs are sent to the feature extraction module in enhanced_classifier.py, which filters out infrastructure domains, cleans domain names by removing prefixes like 'www.', and looks up each domain in our 750-domain dictionary to categorize it.
+
+Feature extraction calculates 23 features including percentages, session duration, domain entropy, and behavioral patterns.
+
+These features go through two layers: First, XGBoost classification using the trained model to predict behavior with confidence. Second, anomaly detection using Isolation Forest and pattern-based rules to flag unusual behavior.
+
+Finally, we package the results with an anonymized user ID, display comprehensive analysis to the screen, and save everything to behavior_results.json."
+
